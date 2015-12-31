@@ -24,5 +24,5 @@ Ext4! Beta v2.6
 http://forum.v2alliance.net/viewthread.php?tid=164&extra=page%3D1
 
 #Thanks
-PokeGuys
-Saren
+- PokeGuys (Gold Gundam)
+- Saren (reCAPTCHA)
