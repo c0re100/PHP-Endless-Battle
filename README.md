@@ -1,7 +1,7 @@
 # PHP-Endless-Battle
 Ext4! Beta v2.6
 
-INSTALLATION
+# INSTALLATION
 - Configure Server/Database settings(cfu.php/index.php)
 - Import a MySQL Database(INSTALL.SQL) using phpMyAdmin
 - Done
