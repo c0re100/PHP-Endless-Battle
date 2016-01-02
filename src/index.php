@@ -40,7 +40,7 @@ echo "<p><a href=\"gen_info.php?action=history\" style='text-decoration: none;fo
 echo "<a href=\"http://ext4.me\" TARGET=\"_blank\" style='text-decoration: none;font-size:18px'>&nbsp;&nbsp;討論區</a></p>";
 
 //Database Setting For Player Counter
-$consql = mysql_connect("localhost","ebs","ebs");
+$consql = mysql_connect("172.17.0.1","root","1234");
 mysql_select_db("ebs", $consql);
 $query = mysql_query("SELECT count(username) as num FROM vsqa_phpeb_user_general_info");
 $cnt = mysql_result($query, 0);
