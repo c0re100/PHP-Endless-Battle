@@ -1,0 +1,25 @@
+web:
+  build: .
+  volumes:
+    - ./src:/var/www/html/
+  ports:
+    - "9999:80"
+  links:
+   - mysql
+
+mysql:
+  image: mysql
+  ports:
+    - "3306:3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: "1234"
+    
+phpmyadmin:
+  image: corbinu/docker-phpmyadmin
+  links:
+    - mysql
+  ports:
+    - "8181:80"
+  environment:
+    MYSQL_USERNAME: root
+    MYSQL_ROOT_PASSWORD: "1234"
