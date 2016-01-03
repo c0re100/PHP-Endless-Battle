@@ -1,7 +1,7 @@
 web:
   build: .
   volumes:
-    - ./src:/var/www/html/
+    - ../src/:/var/www/html/
   ports:
     - "9999:80"
   links:
@@ -13,13 +13,6 @@ mysql:
     - "3306:3306"
   environment:
     MYSQL_ROOT_PASSWORD: "1234"
-    
-phpmyadmin:
-  image: corbinu/docker-phpmyadmin
-  links:
-    - mysql
-  ports:
-    - "8181:80"
-  environment:
-    MYSQL_USERNAME: root
-    MYSQL_ROOT_PASSWORD: "1234"
+    MYSQL_DATABASE: "ebs"
+  volumes:
+    - ../init/:/docker-entrypoint-initdb.d/

@@ -9,6 +9,4 @@
 The following guide assumes your `DOCKER_MACHINE_IP` is the default `192.168.99.100`.
 
 1. run `setup.sh` to build and run docker containers.
-2. In your browser, visit PHPMYADMIN at `http://192.168.99.100:8181`.
-3. After logging in with `root:1234`, create a database called `ebs` and import `src/INSTALL.SQL`
-4. To verify your setup, visit `http://192.168.99.100:9999`. You should see index.php.
+2. To verify your setup, visit `http://192.168.99.100:9999`. You should see index.php.

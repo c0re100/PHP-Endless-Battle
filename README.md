@@ -3,7 +3,7 @@ Ext4! Beta v2.6
 
 # INSTALLATION
 - Configure Server/Database settings(cfu.php/index.php)
-- Import a MySQL Database(INSTALL.SQL) using phpMyAdmin
+- Import a MySQL Database(install.sql) using phpMyAdmin
 - Done
 
 # Why not to use?
