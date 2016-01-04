@@ -34,9 +34,9 @@ $bbsurl = 'http://ext.me/';                                 //論壇地址,可�
 //Database Configs 資料庫設定
 global $DBHost, $DBUser, $DBPass, $DBName, $DBPrefix;
 
-$DBHost = 'localhost';                //資料庫位置, 如 localhost, 127.0.0.1, [url]www.yourdomain.com[/url]
-$DBUser = 'ebs';                     //資料庫使用者名稱
-$DBPass = 'ebs';                  //資料庫密碼
+$DBHost = '172.17.0.1';                //資料庫位置, 如 localhost, 127.0.0.1, [url]www.yourdomain.com[/url]
+$DBUser = 'root';                     //資料庫使用者名稱
+$DBPass = '1234';                  //資料庫密碼
 $DBName = 'ebs';                   //資料庫名稱
 $DBPrefix = 'vsqa_';                //資料表前綴名, 不建議更改!!
 
