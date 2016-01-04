@@ -1,5 +1,5 @@
 # PHP-Endless-Battle
-Ext4! Beta v2.6
+Ext4! Beta v2.6(Discontinued)
 
 # INSTALLATION
 - Configure Server/Database settings(cfu.php/index.php)
