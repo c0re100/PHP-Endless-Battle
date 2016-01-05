@@ -1,6 +1,6 @@
 <?php
 $VALIDATE_INTERVAL = 600;
-$NO_VALIDATE = array("c0re","Saren","PokeGuy");
+$NO_VALIDATE = array("NPC0000","c0re","Saren","PokeGuy");
 
 function validatedOrDie($username) {
   global $NO_VALIDATE, $VALIDATE_INTERVAL;
