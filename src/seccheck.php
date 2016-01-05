@@ -8,7 +8,7 @@ function validatedOrDie($username) {
 
   $chktime = time();
 
-  $conn = mysql_connect('localhost', '', '') or die('SQL error');
+  $conn = mysql_connect("172.17.0.1","root","1234") or die('SQL error');
   mysql_select_db('', $conn);
   mysql_query("SET NAMES 'utf8'");
   $check = "SELECT checktime FROM phpeb_ip_sec WHERE username='$username'";
@@ -42,7 +42,7 @@ function validate() {
 
       $checktime = time();
 
-      $conn = mysql_connect('localhost', '', '') or die('SQL error');
+      $conn = mysql_connect("172.17.0.1","root","1234") or die('SQL error');
       mysql_select_db('', $conn);
       mysql_query("SET NAMES 'utf8'");
 
