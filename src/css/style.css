@@ -1,0 +1,11 @@
+.button-dark {
+ font-size: 10pt;
+ color: #000000;
+ background: url(/unitimg/anliu/niu.gif);
+}
+
+.button-light {
+ font-size: 10pt;
+ color: #FFFFFF;
+ background: url(/unitimg/anliu/niu2.gif);
+}

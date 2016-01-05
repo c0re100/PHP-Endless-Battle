@@ -1,5 +1,6 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
+echo '<link rel="stylesheet" href="css/style.css">';
 //Display of Fields
 unset($Df,$a,$d,$S,$ColumnNum);
 $FieldDisplay = '';
@@ -209,7 +210,7 @@ for ($counter=1;$counter<=$numofoppos;$counter++){
         }
         echo "</select>";
         echo "<a name=StartBattle>攻擊目標:</a> ";
-        echo "<input type=submit $BStyleB style=\"$BStyleA\" name=battle_submit value='確定' OnClick=\"this.style.visibility='hidden';\"";
+        echo "<input type=submit $BStyleB class=\"button-dark\" name=battle_submit value='確定' OnClick=\"this.style.visibility='hidden';\"";
         echo $DisAtkButton;
         echo ">   ";
         echo "";
