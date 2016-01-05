@@ -1,5 +1,6 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
+echo '<link rel="stylesheet" href="css/style.css">';
 $sql_gen = ("
 SELECT `gen`.`username`, `password`, `color`, `msuit`, `typech`, `time2`, `coordinates`, `organization` , `hypermode`, `fame`
 FROM `".$GLOBALS['DBPrefix']."phpeb_user_general_info` `gen`, `".$GLOBALS['DBPrefix']."phpeb_user_game_info` `game` 
@@ -132,7 +133,7 @@ for ($counter=1;$counter<=$numofoppos;$counter++){
         }
         echo "</select>";
         echo "<a name=StartBattle>攻擊目標:</a> ";
-        echo "<input type=submit $BStyleB style=\"$BStyleA\" name=battle_submit value='確定' OnClick=\"this.style.visibility='hidden';\"";
+        echo "<input type=submit $BStyleB class=\"button-dark\" name=battle_submit value='確定' OnClick=\"this.style.visibility='hidden';\"";
         echo $DisAtkButton;
         echo ">   ";
         echo "";

@@ -5,6 +5,7 @@ $mode = (isset($_GET['action'])) ? $_GET['action'] : $_POST['action'];
 include 'cfu.php';
 AuthUser();
 postHead('');
+echo '<link rel="stylesheet" href="css/style.css">';
 if ($mode == 'proc') {
     $sql_ugnrli = ('SELECT * FROM `'.$GLOBALS['DBPrefix']."phpeb_user_general_info` WHERE username='".$_SESSION['username']."'");
     $UsrGenrl_Qr = mysql_query($sql_ugnrli) or die('出錯, 原因:'.mysql_error().'，');
@@ -293,7 +294,7 @@ if ($mode == 'proc') {
     echo '<td width="30%" valign=top><div align="center">';
     echo '<center>';
     echo '<table style="font-size:15px;" width="55%"><tr>';
-    echo '<td style="background: '.$BStyleC.';font-size:13px;" align=center width="70">';
+    echo '<td class="button-light" style="font-size:13px;" align=center width="70">';
     if ($UsrGenrl['msuit']) {
         echo '<b>生命值</b></td>';
     } else {
@@ -303,7 +304,7 @@ if ($mode == 'proc') {
     $Pl_ShowEN = floor($PlGameVal['en']);
     $Pl_ShowSP = floor($PlGameVal['sp']);
     echo "<td align=right style=\"border:1px solid #404040;\" width=\"124\"><b id=current_hp>$Pl_ShowHP</b><b> / $PlGameVal[hpmax]</b></td></tr><tr>";
-    echo '<td style="background: '.$BStyleC.';font-size:13px;" align=center width="70">';
+    echo '<td class="button-light" style="font-size:13px;" align=center width="70">';
     if ($UsrGenrl['msuit']) {
         echo '<b>能量值</b></td>';
     } else {
@@ -311,17 +312,17 @@ if ($mode == 'proc') {
     }
     echo "<td align=right style=\"border:1px solid #404040;\" width=\"124\"><b id=current_en>$Pl_ShowEN</b><b> / $PlGameVal[enmax]</b></td></tr><tr>";
 
-    echo '<td style="background: '.$BStyleC.';font-size:13px;" align=center width="70">';
+    echo '<td class="button-light" style="font-size:13px;" align=center width="70">';
     echo '<b>氣力</b></td>';
     echo "<td align=right style=\"border:1px solid #404040;\" width=\"124\"><b id=current_sp>$Pl_ShowSP</b><b> / $PlGameVal[spmax]</b></td></tr><tr>";
 
-    echo '<td style="background: '.$BStyleC.';font-size:13px;" align=center width="70">';
+    echo '<td class="button-light" style="font-size:13px;" align=center width="70">';
     echo '<b>等級</b></td>';
     if ($PlGameVal['level'] > 1000) {
         $PlGameVal['level'] = 1000;
     }
     echo "<td align=right style=\"border:1px solid #404040;\" width=\"124\"><b>$PlGameVal[level]</b></td></tr><tr>";
-    echo '<td style="background: '.$BStyleC.';font-size:13px;" align=center width="70">';
+    echo '<td class="button-light" style="font-size:13px;" align=center width="70">';
     $Show_Exp = '';
     if ($PlGameVal['level'] >= 1000) {
         $UserNextLvExp = false;
@@ -332,7 +333,7 @@ if ($mode == 'proc') {
     }
     echo '<b>經驗值</b></td>';
     echo "<td align=right style=\"border:1px solid #404040;\" width=\"124\"><b>$Show_Exp</b></td></tr><tr>";
-    echo '<td style="background: '.$BStyleC.';font-size:13px;" align=center width="70">';
+    echo '<td class="button-light" style="font-size:13px;" align=center width="70">';
     echo '<b>能力</b></td>';
     echo '<td align=right style="border:1px solid #404040;" width="124"><b';
     if ($UsrGenrl['hypermode'] == 1 || ($UsrGenrl['hypermode'] >= 4 && $UsrGenrl['hypermode'] <= 6)) {
@@ -349,16 +350,16 @@ if ($mode == 'proc') {
         echo '<br><font style="color: FF0000;font-weight: bold">EVA Mode</font>';
     }
     echo '</b></td></tr><tr>';
-    echo '<td style="background: '.$BStyleC.';font-size:13px;" align=center width="70">';
+    echo '<td class="button-light" style="font-size:13px;" align=center width="70">';
     echo '<b>成長點數</b></td>';
     echo "<td align=right style=\"border:1px solid #404040;\" width=\"124\"><b>$UsrGenrl[growth]</b></td></tr><tr>";
-    echo '<td style="background: '.$BStyleC.';font-size:13px;" align=center width="70">';
+    echo '<td class="button-light" style="font-size:13px;" align=center width="70">';
     echo '<b>金錢</b></td>';
     echo '<td align=right style="border:1px solid #404040;" width="124"><b>'.number_format($UsrGenrl['cash']).'</b></td></tr>';
-	echo '<td style="background: '.$BStyleC.';font-size:13px;" align=center width="70">';
+	echo '<td class="button-light" style="font-size:13px;" align=center width="70">';
 	echo '<b>合金</b></td>';
     echo '<td align=right style="border:1px solid #404040;" width="124"><b>'.number_format($UsrGenrl['Gold']).'</b></td></tr>';
-	echo '<td style="background: '.$BStyleC.';font-size:13px;" align=center width="70">';
+	echo '<td class="button-light" style="font-size:13px;" align=center width="70">';
 	echo '<b>是日戰鬥次數</b></td>';
     echo "<td align=right style=\"border:1px solid #404040;\" width=\"124\"><b>$UsrGenrl[bcount]/1500</b></td></tr><tr></table>";
     echo '</center>';
@@ -559,34 +560,34 @@ for ($LogShowNum = 1;$LogShowNum <= $Pl_LEnt;++$LogShowNum) {
     echo '<td width="100%" height="11">';
     echo "<input type=hidden value='none' name=actionb>";
     echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\">";
-    echo "<input style=\"$BStyleA\" $BStyleB type=button value='戰鬥' onClick=\"movebattle()\">";
-    echo "<input style=\"$BStyleA\" $BStyleB type=button value='移動' onClick=\"act.action='map.php?action=Move';actionb.value='A';act.target='Beta';act.submit();\">";
+    echo "<input class=\"button-dark\" $BStyleB type=button value='戰鬥' onClick=\"movebattle()\">";
+    echo "<input class=\"button-dark\" $BStyleB type=button value='移動' onClick=\"act.action='map.php?action=Move';actionb.value='A';act.target='Beta';act.submit();\">";
     if ($Area['User']['hp'] <= 0 && $PlGameVal['rights'] == '1' && ereg_replace('(Atk=\()|\)', '', $Pl_Org['optmissioni']) == $UsrGenrl['coordinates'] && $CFU_Time < $Pl_Org['opttime']) {
-        echo "<input style=\"$BStyleA\" $BStyleB type=button value='佔領' onClick=\"act.action='organization.php?action=TakeCity';actionb.value='A';act.target='Beta';act.submit();\">";
+        echo "<input class=\"button-dark\" $BStyleB type=button value='佔領' onClick=\"act.action='organization.php?action=TakeCity';actionb.value='A';act.target='Beta';act.submit();\">";
     }
 	if ($PlGameVal['rights'] && ereg_replace('(Atk=\()|\)', '', $Pl_Org['optmissioni']) == $UsrGenrl['coordinates']) {
-		echo "<input style=\"$BStyleA\" $BStyleB type=button value='放棄佔領' onClick=\"act.action='organization.php?action=GiveUp';actionb.value='A';act.target='Beta';act.submit();\">";
+		echo "<input class=\"button-dark\" $BStyleB type=button value='放棄佔領' onClick=\"act.action='organization.php?action=GiveUp';actionb.value='A';act.target='Beta';act.submit();\">";
 	}	
-    echo "　<input style=\"$BStyleA\" $BStyleB type=button value='裝備' onClick=\"act.action='equip.php?action=equip';act.target='Beta';act.submit();\">";
-    echo "<input style=\"$BStyleA\" $BStyleB type=button value='機體生產' onClick=\"act.action='equip.php?action=buyms';act.actionb.value='buyms';act.target='Beta';act.submit();\">";
-    echo "<input style=\"$BStyleA\" $BStyleB type=button value='機體改造' onClick=\"act.action='statsmod.php?action=modms';act.actionb.value='buyms';act.target='Beta';act.submit();\">";
-    echo "<input style=\"$BStyleA\" $BStyleB type=button value='兵器製造' onClick=\"act.action='tactfactory.php?action=main';act.actionb.value='none';act.target='Beta';act.submit();\">";
-    echo "<input style=\"$BStyleA\" $BStyleB type=button value='修理工場' onClick=\"act.action='statsmod.php?action=repairms';act.actionb.value='sel';act.target='Beta';act.submit();\">";
-    echo "　<input style=\"$BStyleA\" $BStyleB type=button value='戰術學院' onClick=\"act.action='tacticslearn.php?action=main';act.actionb.value='none';act.target='Beta';act.submit();\">";
-    echo "<input style=\"$BStyleA\" $BStyleB type=button value='倉庫' onClick=\"act.action='warehouse.php?action=selection';act.actionb.value='none';act.target='Beta';act.submit();\">";
-    echo "<input style=\"$BStyleA\" $BStyleB type=button value='銀行' onClick=\"act.action='bank.php?action=main';act.actionb.value='none';act.target='Beta';act.submit();\">";
-    echo "<input style=\"$BStyleA\" $BStyleB type=button value='商場' onClick=\"act.action='market.php?action=main';act.actionb.value='none';act.target='Beta';act.submit();\">";
-	echo "　<input style=\"$BStyleA\" $BStyleB type=button value='情報' onClick=\"act.action='information.php?action=Main';act.actionb.value='';act.target='Beta';act.submit();\">";
-    echo "<input style=\"$BStyleA\" $BStyleB type=button value='排名' onClick=\"act.action='gen_info.php?action=ranks';act.actionb.value='none';act.target='Beta';act.submit();\">";
-	echo "　<input style=\"$BStyleA\" $BStyleB type=button value='特殊' onClick=\"act.action='scommand.php?action=main';act.actionb.value='none';act.target='Beta';act.submit();\">";
+    echo "　<input class=\"button-dark\" $BStyleB type=button value='裝備' onClick=\"act.action='equip.php?action=equip';act.target='Beta';act.submit();\">";
+    echo "<input class=\"button-dark\" $BStyleB type=button value='機體生產' onClick=\"act.action='equip.php?action=buyms';act.actionb.value='buyms';act.target='Beta';act.submit();\">";
+    echo "<input class=\"button-dark\" $BStyleB type=button value='機體改造' onClick=\"act.action='statsmod.php?action=modms';act.actionb.value='buyms';act.target='Beta';act.submit();\">";
+    echo "<input class=\"button-dark\" $BStyleB type=button value='兵器製造' onClick=\"act.action='tactfactory.php?action=main';act.actionb.value='none';act.target='Beta';act.submit();\">";
+    echo "<input class=\"button-dark\" $BStyleB type=button value='修理工場' onClick=\"act.action='statsmod.php?action=repairms';act.actionb.value='sel';act.target='Beta';act.submit();\">";
+    echo "　<input class=\"button-dark\" $BStyleB type=button value='戰術學院' onClick=\"act.action='tacticslearn.php?action=main';act.actionb.value='none';act.target='Beta';act.submit();\">";
+    echo "<input class=\"button-dark\" $BStyleB type=button value='倉庫' onClick=\"act.action='warehouse.php?action=selection';act.actionb.value='none';act.target='Beta';act.submit();\">";
+    echo "<input class=\"button-dark\" $BStyleB type=button value='銀行' onClick=\"act.action='bank.php?action=main';act.actionb.value='none';act.target='Beta';act.submit();\">";
+    echo "<input class=\"button-dark\" $BStyleB type=button value='商場' onClick=\"act.action='market.php?action=main';act.actionb.value='none';act.target='Beta';act.submit();\">";
+	echo "　<input class=\"button-dark\" $BStyleB type=button value='情報' onClick=\"act.action='information.php?action=Main';act.actionb.value='';act.target='Beta';act.submit();\">";
+    echo "<input class=\"button-dark\" $BStyleB type=button value='排名' onClick=\"act.action='gen_info.php?action=ranks';act.actionb.value='none';act.target='Beta';act.submit();\">";
+	echo "　<input class=\"button-dark\" $BStyleB type=button value='特殊' onClick=\"act.action='scommand.php?action=main';act.actionb.value='none';act.target='Beta';act.submit();\">";
 	if ($UsrGenrl['acc_status'] == '9') {
-		echo "　<input style=\"$BStyleA\" $BStyleB type=button value='舊管理中心' onClick=\"act.action='admin.php?action=panel';actionb.value='A';act.target='Beta';act.submit();\">";
-		echo "<input style=\"$BStyleA\" $BStyleB type=button value='新管理中心' onClick=\"act.action='manager.php';actionb.value='A';act.target='Beta';act.submit();\">";
+		echo "　<input class=\"button-dark\" $BStyleB type=button value='舊管理中心' onClick=\"act.action='admin.php?action=panel';actionb.value='A';act.target='Beta';act.submit();\">";
+		echo "<input class=\"button-dark\" $BStyleB type=button value='新管理中心' onClick=\"act.action='manager.php';actionb.value='A';act.target='Beta';act.submit();\">";
 	}
-    echo "　<input style=\"$BStyleA\" $BStyleB type=button name=ig_refresh value='重新整理' disabled onClick=\"act.action='gmscrn_main.php?action=proc';act.target='Alpha';act.submit();\">";
-	echo "　<input style=\"$BStyleA\" $BStyleB type=button name=chat value='聊天' onClick=\"window.open('','$CFU_Time','resizable=1,width=800,height=600');act.action='chat.php';act.target='$CFU_Time';act.submit();\">";
-	echo "<input style=\"$BStyleA\" $BStyleB type=button name=forum value='討論區' onClick=\"window.open('http://ext4.me/forum.php');\">";
-    echo "　<input style=\"$BStyleA\" $BStyleB type=button value='退出' onClick=\"location.replace('logout.php');\">";
+    echo "　<input class=\"button-dark\" $BStyleB type=button name=ig_refresh value='重新整理' disabled onClick=\"act.action='gmscrn_main.php?action=proc';act.target='Alpha';act.submit();\">";
+	echo "　<input class=\"button-dark\" $BStyleB type=button name=chat value='聊天' onClick=\"window.open('','$CFU_Time','resizable=1,width=800,height=600');act.action='chat.php';act.target='$CFU_Time';act.submit();\">";
+	echo "<input class=\"button-dark\" $BStyleB type=button name=forum value='討論區' onClick=\"window.open('http://ext4.me/forum.php');\">";
+    echo "　<input class=\"button-dark\" $BStyleB type=button value='退出' onClick=\"location.replace('logout.php');\">";
     echo '</td>';
     echo '</tr></form>';
     echo '</table>';

@@ -122,7 +122,7 @@ $ChatSave = 0;               //聊天資訊保留秒數, 可用方程式,「(24*
 $ChatAutoRefresh = 60;                //聊天資訊自動刷新的秒數, 建議不要少過 60 秒
 
 //Other System Configs - 其他系統設定
-global $LogEntries, $Show_ptime, $ChatShow, $ChatSave, $ChatAutoRefresh, $StartZoneRestriction, $dbcharset, $BStyleA, $BStyleB;
+global $LogEntries, $Show_ptime, $ChatShow, $ChatSave, $ChatAutoRefresh, $StartZoneRestriction, $dbcharset, $BStyleB;
 $NPC_RegKey = '';                //無限型註冊碼值, 需要到SQL Server自行製作
 $Show_ptime = 1;                //顯示程式運作時間, 設為 0 則不顯示
 $LogEntries = 5;                //戰鬥紀錄數目上限, 請輸入 '0' 至 '5', 輸入零則會關閉戰鬥紀錄系統, 請勿設大於5, 以免系統出錯
@@ -134,8 +134,6 @@ $StartZoneRestriction = 5;        //玩家開始時的區域, 隨機分區, 可�
                                 //設為 8 時會在 A1 至 C3 隨機出現, 最高可設為8
                                 //請參考 register.php Line 233 至 Line 244
 $dbcharset = 'utf8';                //資料庫伺服器文字校對 - 繁體版 php-eb 無需更改
-$BStyleA = 'font-size: 10pt; color: #000000; background: url(unitimg/anliu/niu.gif) '; //主畫面的按鈕樣式
-$BStyleC = 'font-size: 10pt; color: #FFFFFF; background: url(unitimg/anliu/niu2.gif) '; 
 $BStyleB = "onmouseover=\"this.style.color='yellow'\" onmouseout=\"this.style.color='000000'\"";        //同上, 滑鼠移過時會轉色的語法
 
 //Registering Config                //註冊設定
