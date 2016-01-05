@@ -1,0 +1,30 @@
+
+table.AlphaChan{
+	border-collapse: collapse;
+	border-color: #111111;
+	filter:alpha(opacity=25);
+	opacity: 0.25;
+}
+
+table.NormChan{
+	border-collapse: collapse;
+	border-color: #111111;
+	filter:alpha(opacity=100);
+	opacity: 1;
+}
+
+table.HideChan{
+	border-collapse: collapse;
+	border-color: #111111;
+	filter:alpha(opacity=0);
+	opacity: 0;
+}
+
+hr.filterAlpha{
+	filter:alpha(opacity=100,finishopacity=40,style=2);
+}
+
+.NoAlpha{
+	filter:alpha(opacity=100);
+	opacity: 1;
+}

@@ -1,7 +1,7 @@
 <html>
-        <head>
-                <title>JavaScript php-eb é…é»è¨ˆç®—å·¥å…·å®Œæ•´ä¸­æ–‡ç‰ˆ v1.2</title>
-        </head>
+	<head>
+		<title>JavaScript php-eb °tÂI­pºâ¤u¨ã§¹¾ã¤¤¤åª© v1.2</title>
+	</head>
 <body>
 
 <script language="JavaScript">
@@ -9,60 +9,60 @@ function CalcStatPt(Lv_N){
 var Stat_Gain=3;
 var Lv;
 for(Lv=1;Lv<=Lv_N;Lv++){
-        if (Lv%5 == 0)Stat_Gain++;
-        }
+	if (Lv%5 == 0)Stat_Gain++;
+	}
 return Stat_Gain;
 }
 function CalcStatReq(Stat_N){//Req
 var Stat_Req=2;
 var Stat;
 for(Stat=1;Stat<=Stat_N;Stat++){
-        if ((Stat)%10 == 0 && Stat>1)Stat_Req++;
-        }
+	if ((Stat)%10 == 0 && Stat>1)Stat_Req++;
+	}
 return Stat_Req;
 }
 function CalcExp (NowLv){
-        var Lv=1;
-        var Exp=0;
-        var i= 0;
-        var n= 0;
-        while (Lv <= NowLv){
-                n=i;
-                i = i + 1;
-                if ((Lv%9) == 0){
-                Exp=Math.ceil(Lv*(Lv*2) + Exp*1.2);}
-                else if((Lv%33) == 0){
-                Exp=Math.ceil(Lv*(Lv*2.5) + Exp*2 + 150);}
-                else{
-                Exp=Math.ceil(Lv*(Lv*0.5) + Exp*1.05015781);
-                }
-                if(Lv >= 90){
-                Exp=Math.ceil(Exp*1.035 + 150);}
-                var C=new Array(NowLv);
-                var D=Exp + C[n];
-                C[i]=D;
-                if (Lv == NowLv) return Exp;
-                Lv=Lv + 1;
+	var Lv=1;
+	var Exp=0;
+	var i= 0;
+	var n= 0;
+	while (Lv <= NowLv){
+		n=i;
+		i = i + 1;
+		if ((Lv%9) == 0){
+		Exp=Math.ceil(Lv*(Lv*2) + Exp*1.2);}
+		else if((Lv%33) == 0){
+		Exp=Math.ceil(Lv*(Lv*2.5) + Exp*2 + 150);}
+		else{
+		Exp=Math.ceil(Lv*(Lv*0.5) + Exp*1.05015781);
+		}
+		if(Lv >= 90){
+		Exp=Math.ceil(Exp*1.035 + 150);}
+		var C=new Array(NowLv);
+		var D=Exp + C[n];
+		C[i]=D;
+		if (Lv == NowLv) return Exp;
+		Lv=Lv + 1;
 }
 }
 
-        function CalcTotalStatPtsG(NowLv){
-        var lv_loop_ct;
-        var Growth_Total = 36;
-                for(lv_loop_ct=1;lv_loop_ct <= NowLv;lv_loop_ct++){
-                        Growth_Total += CalcStatPt(lv_loop_ct);
-                }
-        return Growth_Total;
-        }
+	function CalcTotalStatPtsG(NowLv){
+	var lv_loop_ct;
+	var Growth_Total = 36;
+		for(lv_loop_ct=1;lv_loop_ct <= NowLv;lv_loop_ct++){
+			Growth_Total += CalcStatPt(lv_loop_ct);
+		}
+	return Growth_Total;
+	}
 
-        function CalcTotalStatPtsR (NowStat){
-        var stat_loop_ct;
-        var stat_now = 0;
-                for(stat_loop_ct=1;stat_loop_ct < NowStat;stat_loop_ct++){
-                        stat_now += CalcStatReq(stat_loop_ct);
-                }
-        return stat_now;
-        }
+	function CalcTotalStatPtsR (NowStat){
+	var stat_loop_ct;
+	var stat_now = 0;
+		for(stat_loop_ct=1;stat_loop_ct < NowStat;stat_loop_ct++){
+			stat_now += CalcStatReq(stat_loop_ct);
+		}
+	return stat_now;
+	}
 
 function CalcTotalStatPtsR_old (NowStat){
 var cc = 2;
@@ -70,142 +70,142 @@ var ccc = 0;
 var aa;
 
 for(aa=1;aa<=NowStat;aa++){
-        if (aa > 1)ccc += cc;
-        if ((aa)%10 == 0 && aa>1)cc++;
-        }
+	if (aa > 1)ccc += cc;
+	if ((aa)%10 == 0 && aa>1)cc++;
+	}
 return ccc;
 }
 function CalcLevelRec (NowStat,NPt){
-        if (!NPt)
-        var NPt = CalcTotalStatPtsR(NowStat);
-        var Lv;
-        var LvPt = 36;
-        for(Lv=1;LvPt < NPt;Lv++){
-        LvPt = CalcTotalStatPtsG(Lv);
-        }
-        return Lv-1;
-        }
+	if (!NPt)
+	var NPt = CalcTotalStatPtsR(NowStat);
+	var Lv;
+	var LvPt = 36;
+	for(Lv=1;LvPt < NPt;Lv++){
+	LvPt = CalcTotalStatPtsG(Lv);
+	}
+	return Lv-1;
+	}
 </script>
 <table>
 <tr><td>
 <form name=Main>
 
-è¼¸å…¥ç­‰ç´š:<input type="text" name="Level"><br>
-<input type="button" onClick="StatptG.innerText=CalcStatPt(document.Main.Level.value);" value='è¨ˆç®—å¯å¾—çš„æˆé•·é»æ•¸'><br>
-<input type="button" onClick="TStatptG.innerText=CalcTotalStatPtsG(document.Main.Level.value);" value='è¨ˆç®—å¯å¾—çš„ç¸½æˆé•·é»æ•¸''><br>
-<input type="button" onClick="ExpR.innerText=CalcExp(document.Main.Level.value);" value='è¨ˆç®—æ‰€éœ€ç¶“é©—'><br>
+¿é¤Jµ¥¯Å:<input type="text" name="Level"><br>
+<input type="button" onClick="StatptG.innerText=CalcStatPt(document.Main.Level.value);" value='­pºâ¥i±oªº¦¨ªøÂI¼Æ'><br>
+<input type="button" onClick="TStatptG.innerText=CalcTotalStatPtsG(document.Main.Level.value);" value='­pºâ¥i±oªºÁ`¦¨ªøÂI¼Æ''><br>
+<input type="button" onClick="ExpR.innerText=CalcExp(document.Main.Level.value);" value='­pºâ©Ò»İ¸gÅç'><br>
 
-è¼¸å…¥æƒ³è¨ˆç®—çš„èƒ½åŠ›å€¼:<input type="text" name="Status"><br>
-<input type="button" onClick="StatptR.innerText=CalcStatReq(document.Main.Status.value);" value='è¨ˆç®—æ‰€éœ€æˆé•·é»æ•¸'><br>
-<input type="button" onClick="TStatptR.innerText=CalcTotalStatPtsR(document.Main.Status.value);" value='è¨ˆç®—æ‰€éœ€ç¸½æˆé•·é»æ•¸'><br>
-<input type="button" onClick="TLevelStR.innerText=CalcLevelRec(document.Main.Status.value);" value='è¨ˆç®—æ‰€éœ€ç´šæ•¸'><br>
+¿é¤J·Q­pºâªº¯à¤O­È:<input type="text" name="Status"><br>
+<input type="button" onClick="StatptR.innerText=CalcStatReq(document.Main.Status.value);" value='­pºâ©Ò»İ¦¨ªøÂI¼Æ'><br>
+<input type="button" onClick="TStatptR.innerText=CalcTotalStatPtsR(document.Main.Status.value);" value='­pºâ©Ò»İÁ`¦¨ªøÂI¼Æ'><br>
+<input type="button" onClick="TLevelStR.innerText=CalcLevelRec(document.Main.Status.value);" value='­pºâ©Ò»İ¯Å¼Æ'><br>
 <br>
 
 </form>
 </td>
 <td>
 <table>
-        <tr>
-                <td align=right>ä¸‹ä¸€ç´šå¯å¾—æˆé•·é»æ•¸:</td>
-                <td><span id=StatptG>&nbsp;</span></td>
-        </tr>
-        <tr>
-                <td align=right>(è‡³æœ¬ç­‰ç´š)ç¸½æˆé•·é»æ•¸:</td>
-                <td><span id=TStatptG>&nbsp;</span></td>
-        </tr>
-        <tr>
-                <td align=right>æœ¬ç´ è³ªå€¼æ‰€éœ€æˆé•·é»æ•¸:</td>
-                <td><span id=StatptR>&nbsp;</span></td>
-        </tr>
-        <tr>
-                <td align=right>(è‡³æœ¬ç´ è³ªå€¼)æ‰€éœ€ç¸½æˆé•·é»æ•¸:</td>
-                <td><span id=TStatptR>&nbsp;</span></td>
-        </tr>
-        <tr>
-                <td align=right>(è‡³æœ¬ç´ è³ªå€¼)æ‰€éœ€ç´šæ•¸:</td>
-                <td><span id=TLevelStR>&nbsp;</span></td>
-        </tr>
-        <tr>
-                <td align=right>ä¸‹ä¸€ç´šæ‰€éœ€ç¶“é©—:</td>
-                <td><span id=ExpR>&nbsp;</span></td>
-        </tr>
+	<tr>
+		<td align=right>¤U¤@¯Å¥i±o¦¨ªøÂI¼Æ:</td>
+		<td><span id=StatptG>&nbsp;</span></td>
+	</tr>
+	<tr>
+		<td align=right>(¦Ü¥»µ¥¯Å)Á`¦¨ªøÂI¼Æ:</td>
+		<td><span id=TStatptG>&nbsp;</span></td>
+	</tr>
+	<tr>
+		<td align=right>¥»¯À½è­È©Ò»İ¦¨ªøÂI¼Æ:</td>
+		<td><span id=StatptR>&nbsp;</span></td>
+	</tr>
+	<tr>
+		<td align=right>(¦Ü¥»¯À½è­È)©Ò»İÁ`¦¨ªøÂI¼Æ:</td>
+		<td><span id=TStatptR>&nbsp;</span></td>
+	</tr>
+	<tr>
+		<td align=right>(¦Ü¥»¯À½è­È)©Ò»İ¯Å¼Æ:</td>
+		<td><span id=TLevelStR>&nbsp;</span></td>
+	</tr>
+	<tr>
+		<td align=right>¤U¤@¯Å©Ò»İ¸gÅç:</td>
+		<td><span id=ExpR>&nbsp;</span></td>
+	</tr>
 </table>
 </td>
 </tr>
 </table>
 <hr>
-èƒ½åŠ›ç­‰ç´šæˆé•·é»æ•¸è¨ˆç®—å™¨:
+¯à¤Oµ¥¯Å¦¨ªøÂI¼Æ­pºâ¾¹:
 <table align=center>
-        <tr><td>
+	<tr><td>
 
 <form name=Calculator>
 
 <table border=1>
-        <tr>
-                <td>Attacking:<select name="At" onChange=StatnLevelCalc()><script language="JavaScript">for(a=1;a<=100;a++){document.write('<option value='+a+'>'+a)}</script></select></td>
-                <td>Defending:<select name="De" onChange=StatnLevelCalc()><script language="JavaScript">for(a=1;a<=100;a++){document.write('<option value='+a+'>'+a)}</script></select></td>
-        </tr>
-        <tr>
-                <td>Reacting:<select name="Re" onChange=StatnLevelCalc()><script language="JavaScript">for(a=1;a<=100;a++){document.write('<option value='+a+'>'+a)}</script></select></td>
-                <td>Targeting:<select name="Ta" onChange=StatnLevelCalc()><script language="JavaScript">for(a=1;a<=100;a++){document.write('<option value='+a+'>'+a)}</script></select></td>
-        </tr>
+	<tr>
+		<td>Attacking:<select name="At" onChange=StatnLevelCalc()><script language="JavaScript">for(a=1;a<=100;a++){document.write('<option value='+a+'>'+a)}</script></select></td>
+		<td>Defending:<select name="De" onChange=StatnLevelCalc()><script language="JavaScript">for(a=1;a<=100;a++){document.write('<option value='+a+'>'+a)}</script></select></td>
+	</tr>
+	<tr>
+		<td>Reacting:<select name="Re" onChange=StatnLevelCalc()><script language="JavaScript">for(a=1;a<=100;a++){document.write('<option value='+a+'>'+a)}</script></select></td>
+		<td>Targeting:<select name="Ta" onChange=StatnLevelCalc()><script language="JavaScript">for(a=1;a<=100;a++){document.write('<option value='+a+'>'+a)}</script></select></td>
+	</tr>
 </table>
 
 
 </td><td>
 <script language="JavaScript">
-        function StatnLevelCalc(){
-                var xPt = parseInt(document.Calculator.Calc_xGrowth.value);
-                var spcfLv = parseInt(document.Calculator.Calc_Level.value);
-                var AtRSt = CalcTotalStatPtsR(document.Calculator.At.value);
-                var DeRSt = CalcTotalStatPtsR(document.Calculator.De.value);
-                var ReRSt = CalcTotalStatPtsR(document.Calculator.Re.value);
-                var TaRSt = CalcTotalStatPtsR(document.Calculator.Ta.value);
-                var TTlStR = parseInt(AtRSt+DeRSt+ReRSt+TaRSt-xPt);
-                if (document.Calculator.dis_spcflv.checked == false)
-                LevelR.innerText = CalcLevelRec(0,TTlStR)+1;
-                else LevelR.innerText = spcfLv;
-                if (TTlStR > 0) GrowR.innerText = TTlStR;
-                else GrowR.innerText = '0';
-                PtLeft.innerText = CalcTotalStatPtsG(LevelR.innerText-1) - TTlStR;
-        }
-        function parseNumber_c(val){
-        val = val.replace(/[a-zA-Z+&!?=,<>@#$%\^\*\#\/\\\\[\]\{\}\'\"]+/,'');
-        val = parseInt(val);
-        if (!val) val = 0;
-        return val;
-        }
-        function chk_dis_spcflv(){
-        if (document.Calculator.dis_spcflv.checked == true) document.Calculator.Calc_Level.disabled = false;
-        else document.Calculator.Calc_Level.disabled = true;
-        }
+	function StatnLevelCalc(){
+		var xPt = parseInt(document.Calculator.Calc_xGrowth.value);
+		var spcfLv = parseInt(document.Calculator.Calc_Level.value);
+		var AtRSt = CalcTotalStatPtsR(document.Calculator.At.value);
+		var DeRSt = CalcTotalStatPtsR(document.Calculator.De.value);
+		var ReRSt = CalcTotalStatPtsR(document.Calculator.Re.value);
+		var TaRSt = CalcTotalStatPtsR(document.Calculator.Ta.value);
+		var TTlStR = parseInt(AtRSt+DeRSt+ReRSt+TaRSt-xPt);
+		if (document.Calculator.dis_spcflv.checked == false)
+		LevelR.innerText = CalcLevelRec(0,TTlStR)+1;
+		else LevelR.innerText = spcfLv;
+		if (TTlStR > 0) GrowR.innerText = TTlStR;
+		else GrowR.innerText = '0';
+		PtLeft.innerText = CalcTotalStatPtsG(LevelR.innerText-1) - TTlStR;
+	}
+	function parseNumber_c(val){
+	val = val.replace(/[a-zA-Z+&!?=,<>@#$%\^\*\#\/\\\\[\]\{\}\'\"]+/,'');
+	val = parseInt(val);
+	if (!val) val = 0;
+	return val;
+	}
+	function chk_dis_spcflv(){
+	if (document.Calculator.dis_spcflv.checked == true) document.Calculator.Calc_Level.disabled = false;
+	else document.Calculator.Calc_Level.disabled = true;
+	}
 </script>
 <table>
-        <tr>
-                <td align=right>æ‰€éœ€ç­‰ç´š:</td>
-                <td><span id=LevelR>&nbsp;</span></td>
-        </tr>
-        <tr>
-                <td align=right>æ‰€éœ€ç¸½æˆé•·é»æ•¸:</td>
-                <td><span id=GrowR>&nbsp;</span></td>
-        </tr>
-        <tr>
-                <td align=right>å°šé¤˜æˆé•·é»æ•¸:</td>
-                <td><span id=PtLeft>&nbsp;</span></td>
-        </tr>
-        <tr>
+	<tr>
+		<td align=right>©Ò»İµ¥¯Å:</td>
+		<td><span id=LevelR>&nbsp;</span></td>
+	</tr>
+	<tr>
+		<td align=right>©Ò»İÁ`¦¨ªøÂI¼Æ:</td>
+		<td><span id=GrowR>&nbsp;</span></td>
+	</tr>
+	<tr>
+		<td align=right>©|¾l¦¨ªøÂI¼Æ:</td>
+		<td><span id=PtLeft>&nbsp;</span></td>
+	</tr>
+	<tr>
 </table>
 </td>
 </tr>
 <tr>
-        <td align=center colspan=2>
-                æ‰‹å‹•è¼¸å…¥ç­‰ç´š <input name=dis_spcflv type=checkbox onClick="chk_dis_spcflv();StatnLevelCalc()">: <input disabled onChange="this.value=parseNumber_c(this.value);StatnLevelCalc()" style="text-align: center;" type="text" name="Calc_Level" value=1 size=3 maxlength=3>&nbsp;&nbsp;&nbsp;&nbsp;
-                é¡å¤–æˆé•·é»æ•¸: <input style="text-align: center;" type="text" name="Calc_xGrowth" size=3 maxlength=4 value=0 onChange="this.value=parseNumber_c(this.value);StatnLevelCalc()"></td>
+	<td align=center colspan=2>
+		¤â°Ê¿é¤Jµ¥¯Å <input name=dis_spcflv type=checkbox onClick="chk_dis_spcflv();StatnLevelCalc()">: <input disabled onChange="this.value=parseNumber_c(this.value);StatnLevelCalc()" style="text-align: center;" type="text" name="Calc_Level" value=1 size=3 maxlength=3>&nbsp;&nbsp;&nbsp;&nbsp;
+		ÃB¥~¦¨ªøÂI¼Æ: <input style="text-align: center;" type="text" name="Calc_xGrowth" size=3 maxlength=4 value=0 onChange="this.value=parseNumber_c(this.value);StatnLevelCalc()"></td>
 </tr>
 </table>
 </form>
 <br>
 <br>
-
+<a href='http://v2alliance.no-ip.org' style="font-size: 10pt;text-decoration: none;color: ForestGreen">php-eb StatusPoint Calculator &copy; 2005-2007 v2Alliance All Rights Reserved</a>
 </body>
 </html>

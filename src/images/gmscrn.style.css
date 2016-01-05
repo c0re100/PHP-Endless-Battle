@@ -1,0 +1,14 @@
+
+td.lowLight, td.highLight {
+	cursor: pointer;
+	padding-top: 1px;
+	width: 100px;
+	height: 15px;
+	text-align: center;
+}
+td.lowLight {
+	background: url(neo/btn_ssc_neo.gif) 0px 0px;
+}
+td.highLight{
+	background: url(neo/btn_ssc_neo.gif) -100px 0px;
+}

@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta content="zh-tw" http-equiv="Content-Language" />
+	<meta content="text/html; charset=big5" http-equiv="Content-Type" />
+	<title>Tact Custom Calculator</title>
+	<!--
+		// Tact Custom Calculator
+	-->
+	<style type="text/css">
+		body{
+	background: black;
+	color: white;
+}
+		td.col1{
+			text-align:right;
+			width:100px;
+		}
+		td.col3{
+			text-align:right;
+			width:75px;
+		}
+		td.col4{
+			text-align:left;
+			width:100px;
+		}
+
+		td.col5{
+			text-align:right;
+			width:75px;
+		}
+		.fullWidth{
+			text-align: center;
+			width: 100%;
+		}
+		.halfWidth{
+			text-align: center;
+			width: 50%;
+		}
+		.title{
+			font-weight: bold;
+		}
+	</style>
+</head>
+
+<body>
+<form method="post" name="form1">
+<div style="width: 100%; height: 100%; text-align: center">
+	<table style="width: 100%; height: 100%; text-align: center">
+		<tr>
+			<td>
+			<table style="width: 500px; text-align: center">
+				<tr>
+					<td colspan="6" class="title">計算機</td>
+				</tr>
+				<tr>
+					<td class="col1">原攻擊:</td>
+					<td class="col3"><input name="oriAtk" type="text" class="fullWidth" onchange="custom('atk');" value="0" /></td>
+					<td class="col3">改造點數:</td>
+					<td class="col4"><input name="ptAtk" type="text" class="halfWidth" onchange="custom('atk');" value="0" />/<span id="MaxPtAtk">0</span></td>
+					<td class="col5">改造後:</td>
+					<td class="col5" id="finAtk">&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="col1">原命中:</td>
+					<td class="col3"><input name="oriHit" type="text" class="fullWidth" onchange="custom('hit');" value="0" /></td>
+					<td class="col3">改造點數:</td>
+					<td class="col4"><input name="ptHit" type="text" class="halfWidth" onchange="custom('hit');" value="0" />/<span id="MaxPtHit">0</span></td>
+					<td class="col5">改造後:</td>
+					<td class="col5" id="finHit">&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="col1">原回數:</td>
+					<td class="col3"><input name="oriRds" type="text" class="fullWidth" onchange="custom('rd');" value="0" /></td>
+					<td class="col3">改造點數:</td>
+					<td class="col4"><input name="ptRds" type="text" class="halfWidth" onchange="custom('rd');" value="0" />/<span id="MaxPtRds">100</span></td>
+					<td class="col5">改造後:</td>
+					<td class="col5" id="finRds">&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="col1">原EN消耗:</td>
+					<td class="col3"><input name="oriEnc" type="text" class="fullWidth" onchange="custom('');" value="0" /></td>
+					<td class="col3">改造點數:</td>
+					<td class="col4"><input name="ptEnc" type="text" class="halfWidth" onchange="custom('');" value="0" />/<span id="MaxPtEnc">60</span></td>
+					<td class="col5">改造後:</td>
+					<td class="col5" id="finEnc">&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="col1">武器等級:</td>
+					<td class="col3"><input name="oriGrade" type="text" onchange="custom('');" class="fullWidth" value="0" /></td>
+					<td colspan="2">&nbsp;</td>
+					<td class="col5">EN下限:</td>
+					<td class="col5" id="finEncMin">&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="col1">成功率:</td>
+					<td><span id="successRate">100</span>%</td>
+					<td colspan="4">&nbsp;</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
+</div>
+
+</form>
+
+
+<script language="javascript" type="text/javascript">
+var usePointCalc = false;
+var oAtkC = document.getElementById('finAtk');
+var oHitC = document.getElementById('finHit');
+var oRdsC = document.getElementById('finRds');
+var oEncC = document.getElementById('finEnc');
+var oEncCMin = document.getElementById('finEncMin');
+var oPtLeft = null;
+var oCPoints = null;
+var oSuccessPc = document.getElementById('successRate');
+var oSecureCust = null;
+
+var oSysAtk = document.form1.oriAtk;
+var oSysGrade = document.form1.oriGrade;
+var oSysHit = document.form1.oriHit;
+var oSysRds = document.form1.oriRds;
+var oSysEnc = document.form1.oriEnc;
+
+var oAtkCPt = document.form1.ptAtk;
+var oHitCPt = document.form1.ptHit;
+var oRdsCPt = document.form1.ptRds;
+var oEncCPt = document.form1.ptEnc;
+
+// Calculator Uniques
+var oAtkMax = document.getElementById('MaxPtAtk');
+var oHitMax = document.getElementById('MaxPtHit');
+var oRdsMax = document.getElementById('MaxPtRds');
+var oEncMax = document.getElementById('MaxPtEnc');
+function refreshStats(mAtk, mHit, mRds, mEnc){
+	oAtkMax.innerHTML = mAtk;
+	oHitMax.innerHTML = mHit;
+	oRdsMax.innerHTML = mRds;
+	oEncMax.innerHTML = mEnc;
+	
+	if(getObjInt(oAtkCPt) > mAtk){
+		oAtkCPt.value = mAtk;
+	}
+
+	if(getObjInt(oHitCPt) > mHit){
+		oHitCPt.value = mHit;
+	}
+
+	if(getObjInt(oRdsCPt) > mRds){
+		oRdsCPt.value = mRds;
+	}
+
+	if(getObjInt(oEncCPt) > mEnc){
+		oEncCPt.value = mEnc;
+	}
+}
+// ----- ----- ----- -----
+</script>
+
+
+<script language="javascript" type="text/javascript" src="../../includes/tact_custom.js"></script>
+
+
+</body>
+
+</html>
+
+
+
+
