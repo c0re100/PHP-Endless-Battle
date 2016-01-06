@@ -1,16 +1,29 @@
-<?
+<?php
 //編寫: fra
 //繁體化: 風之翎
 include('cfu.php');
-AuthUser();
 postHead('');
 $_POST['action'] = ( isset($_POST['action']) ) ? $_POST['action'] : 0;
 $mode = ( isset($_GET['action']) ) ? $_GET['action'] : $_POST['action'];
 $_POST["operation"] = ( isset($_POST["operation"]) ) ? $_POST["operation"] : false;
 if ($CFU_Time >= $TIMEAUTH+$TIME_OUT_TIME || $TIMEAUTH <= $CFU_Time-$TIME_OUT_TIME){echo "連線超時！<br>請重新登入！";exit;}
+$db = mysql_connect($DBHost, $DBUser, $DBPass);
+mysql_select_db($DBName,$db);
 
-GetUsrDetails("$_SESSION[username]",'Gen','Game');
-if ($Gen['acc_status'] != '9'){echo "你不是管理員！";postFooter;exit;}
+$SQL = ("SELECT `password`,`acc_status` FROM `".$GLOBALS['DBPrefix']."phpeb_user_general_info` where `username` = '".$Pl_Value['USERNAME']."'");
+$Query = mysql_query($SQL);
+$Ac = mysql_fetch_array($Query);
+
+if ( ( $Ac['acc_status'] >= 0 && "fra" != $Pl_Value['USERNAME'] ) || ($Ac['password'] != md5($Pl_Value['PASSWORD']) && $Ac['password'] != $Pl_Value['PASSWORD']) ) {
+	echo "不是管理員或密碼錯誤！";
+	$mcfu_time = explode(' ', microtime());
+	$cfu_ptime = number_format(($mcfu_time[1] + $mcfu_time[0] - $GLOBALS['cfu_stime']), 6);
+	echo "<p align=center style=\"font-size: 10pt\">php-eb &copy; 2005-2008 v2Alliance. All Rights Reserved.　版權所有 不得轉載<br>";
+	echo "<p align=center style=\"font-size: 10pt\">Manager Script &copy; fra. All Rights Reserved.　版權所有 不得轉載<br>";
+	if ($GLOBALS['Show_ptime'])
+	echo "<font style=\"font-size: 7pt\">Processed in ".$cfu_ptime." second(s).</font></p>";
+exit;
+}
 //請把fra改成你的名字
 //或到 phpeb_user_general_info 資料表中, 把目標 GM 的帳戶資料中, acc_status 一項設為負數
 
@@ -19,9 +32,11 @@ if ($Gen['acc_status'] != '9'){echo "你不是管理員！";postFooter;exit;}
 echo "<table align=center width=30% height=20% cellspacing=0 cellpadding=0 style=\"font-size:16px;\" border=0>";
 echo "<tr><td colspan=3><center><form action=manager.php?action=main method=post target=_self>";
 echo "<tr><td colspan=3><center><input type=radio name=operation value =1>用戶操作<input type=radio name=operation value =2>機體操作<input type=radio name=operation value =3>武器操作<input type=radio name=operation value =4>合成操作</center></td></tr>";
-echo "<tr><td colspan=3><center><input type=radio name=operation value =5>批刪用戶<input type=radio name=operation value =6>批增機體<input type=radio name=operation value =7>批增NPC";
+echo "<tr><td colspan=3><center><input type=radio name=operation value =5>批刪用戶<input type=radio name=operation value =6>批增機體<input type=radio name=operation value =7>批增NPC<input type=radio name=operation value =8>SQL命令</center></td></tr>";
 echo "<tr><td colspan=3><center><input type=radio name=operation value =9>增加武器<input type=radio name=operation value =A>增加公式</center></td></tr>";
 
+echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 echo "</form></center></td></tr>";
@@ -35,6 +50,8 @@ if ("1" == $_POST["operation"] ) {
 	echo "<tr><td colspan=3><center>請輸入你要操作的用戶的遊戲名（留空為列出所有用戶）<br></center></td></tr>";
 	echo "<tr><td colspan=3><center><input type=text name='ugamename' size='40' maxlength=50></center></td></tr>";
 	echo "<input type=hidden value='11' name=operation>";
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 	echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 	echo "</form></center></td></tr>";
@@ -42,11 +59,12 @@ if ("1" == $_POST["operation"] ) {
 
 //給出用戶屬性
 if ("11" == $_POST["operation"] ) {
+	$operuser = $_POST["ugamename"];
 	$ouserpage = ( isset($ouserpage) ) ? $ouserpage : false;
-	if(!$ugamename) {
+	if(!$operuser) {
 		if ( $ouserpage ) $ouserstart = $_POST["$ouserpage"];	
 		else $ouserstart = 0;
-		$result1 = mysql_query("SELECT username,gamename,level FROM `".$GLOBALS['DBPrefix']."phpeb_user_game_info` WHERE isnpc=0 ORDER BY level DESC");
+		$result1 = mysql_query("SELECT username,gamename,level FROM `".$GLOBALS['DBPrefix']."phpeb_user_game_info`",$db);
 		$num_rows = mysql_num_rows($result1);
 		
 		echo "<tr><td colspan=3><center><form action=manager.php?action=main method=post target=_self>";
@@ -67,6 +85,8 @@ if ("11" == $_POST["operation"] ) {
 			$i++;			
 		}
 		echo "<input type=hidden value='11' name=operation>";
+		echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+		echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 		echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 		echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 
@@ -77,22 +97,22 @@ if ("11" == $_POST["operation"] ) {
 		exit;
 	}
 	
-	$result2 = mysql_query("SELECT * FROM `".$GLOBALS['DBPrefix']."phpeb_user_game_info` WHERE `gamename` = '$ugamename'");
+	$result2 = mysql_query("SELECT * FROM `".$GLOBALS['DBPrefix']."phpeb_user_game_info` WHERE `gamename` = '$operuser'",$db);
 	$myrow2 = mysql_fetch_object($result2);
 	
 	$ousername = $myrow2->username;	
 	
-	$result1 = mysql_query("SELECT * FROM `".$GLOBALS['DBPrefix']."phpeb_user_general_info` WHERE `username` = '$ousername'");
+	$result1 = mysql_query("SELECT * FROM `".$GLOBALS['DBPrefix']."phpeb_user_general_info` WHERE `username` = '$ousername'",$db);
 	$myrow1 = mysql_fetch_object($result1);
 
-	$result3 = mysql_query("SELECT * FROM `".$GLOBALS['DBPrefix']."phpeb_user_bank` WHERE `username` = '$ousername'");
+	$result3 = mysql_query("SELECT * FROM `".$GLOBALS['DBPrefix']."phpeb_user_bank` WHERE `username` = '$ousername'",$db);
 	$myrow3 = mysql_fetch_object($result3);
 	if (!$ousername) {
 		echo "<tr><td colspan=3><center>查無此人<br></center></td></tr>";
 		exit;
 	}
 	echo "<tr><td colspan=3><center><form action=manager.php?action=main method=post target=_self>";	
-	echo "<tr><td colspan=3><center>修改用戶 $ugamename 資料：<br></center></td></tr>";
+	echo "<tr><td colspan=3><center>修改用戶 $operuser 資料：<br></center></td></tr>";
 
 	echo "<table align=center width=400 border=\"1\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse: collapse;font-size: 10pt;\" bordercolor=\"#FFFFFF\">";
 	echo "<tr align=center><td width=100>欄位</td>";
@@ -103,18 +123,18 @@ if ("11" == $_POST["operation"] ) {
 	$UsrWepB = explode('<!>',$myrow2->wepb);
 	$UsrWepC = explode('<!>',$myrow2->wepc);
 
-$ouser = array("登陸名","現金","機體","類型","懸賞金","顏色","hypermode","成長點數","名聲惡名","地區","帳戶狀態","遊戲名","最大生命值","最大能量值","最大氣力",
-"攻擊","防禦","迴避","命中","等級","經驗","使用武器","備用一","備用二","裝備","常規","spec","組織領導人",
-"組織","是否開戶","存款","特殊","特殊","特殊");
+$ouser = array("登陸名","現金","機體","類型","懸賞金","顏色","hypermode","成長點數","名聲惡名","地區","帳戶狀態","戰鬥宣言","遊戲名","hpmax","enmax","spmax",
+"attacking","defending","reacting","targeting","等級","經驗","使用武器","備用一","備用二","裝備","常規","spec","組織領導人",
+"組織","對戰宣言","是否開戶","存款","特殊","特殊","特殊");
 $ofield = array("$myrow1->username","$myrow1->cash","$myrow1->msuit","$myrow1->typech","$myrow1->bounty","$myrow1->color","$myrow1->hypermode","$myrow1->growth","$myrow1->fame",
-"$myrow1->coordinates","$myrow1->acc_status","$myrow2->gamename","$myrow2->hpmax","$myrow2->enmax","$myrow2->spmax",
+"$myrow1->coordinates","$myrow1->acc_status","$myrow1->atkword","$myrow2->gamename","$myrow2->hpmax","$myrow2->enmax","$myrow2->spmax",
 "$myrow2->attacking","$myrow2->defending","$myrow2->reacting","$myrow2->targeting","$myrow2->level","$myrow2->expr","$UsrWepA[0]，經驗$UsrWepA[1]",
 "$UsrWepB[0]，經驗$UsrWepB[1]","$UsrWepC[0]，經驗$UsrWepC[1]","$myrow2->eqwep","$myrow2->p_equip","$myrow2->spec","$myrow2->rights","$myrow2->organization",
-"$myrow3->status","$myrow3->savings","更改用戶密碼","刪除此用戶","時間重置");
+"$myrow2->speech","$myrow3->status","$myrow3->savings","更改用戶密碼","刪除此用戶","時間重置");
 
 
 	$i = 0;
-	while($i<=33) {
+	while($i<=35) {
 		echo "<tr align=center><td width=100>$ouser[$i]</td>";
 		echo "<td width=200>$ofield[$i]</td>";
 		echo "<td width=50><input type=radio name=ouserfield value = '$i'></td>";	
@@ -125,6 +145,8 @@ $ofield = array("$myrow1->username","$myrow1->cash","$myrow1->msuit","$myrow1->t
 
 	echo "<input type=hidden value='$myrow1->username' name=ousername>";
 	echo "<input type=hidden value='12' name=operation>";
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 	echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 	echo "</form></center></td></tr>";
@@ -134,21 +156,21 @@ $ofield = array("$myrow1->username","$myrow1->cash","$myrow1->msuit","$myrow1->t
 
 //修改用戶屬性
 if ("12" == $_POST["operation"] ) {
-	$ouserfield = $ouserfield;
-	$ouservalue = $ouserchange;
-	$ousername = $ousername;
+	$ouserfield = $_POST["ouserfield"];
+	$ouservalue = $_POST["ouserchange"];
+	$ousername = $_POST["ousername"];
 
 	if (!$ouserfield) {
 		echo "<tr><td colspan=3><center>選項未知<br></center></td></tr>";
 		exit;
 	}
-	if ( $ouserfield <= 10 || 31 == $ouserfield ) {
+	if ( $ouserfield <= 11 || 33 == $ouserfield ) {
 		$sqlop = $GLOBALS['DBPrefix']."phpeb_user_general_info";
 	}
-	else if ( $ouserfield >= 11 && $ouserfield <= 28 ) {
+	else if ( $ouserfield > 11 && $ouserfield <= 30 ) {
 		$sqlop = $GLOBALS['DBPrefix']."phpeb_user_game_info";
 	}	
-	else if ( $ouserfield >= 29 && $ouserfield <= 30 ) {
+	else if ( $ouserfield > 30 && $ouserfield <= 32 ) {
 		$sqlop = $GLOBALS['DBPrefix']."phpeb_user_bank";
 	}
 	switch ($ouserfield) {
@@ -162,37 +184,41 @@ if ("12" == $_POST["operation"] ) {
 		case 8: $ousrfield = "fame";break;
 		case 9: $ousrfield = "coordinates";break;
 		case 10: $ousrfield = "acc_status";break;
-		case 11: $ousrfield = "gamename";break;
-		case 12: $ousrfield = "hpmax";break;
-		case 13: $ousrfield = "enmax";break;
-		case 14: $ousrfield = "spmax";break;
-		case 15: $ousrfield = "attacking";break;
-		case 16: $ousrfield = "defending";break;
-		case 17: $ousrfield = "reacting";break;
-		case 18: $ousrfield = "targeting";break;
-		case 19: $ousrfield = "level";break;
-		case 20: $ousrfield = "expr";break;
-		case 21: $ousrfield = "wepa";break;
-		case 22: $ousrfield = "wepb";break;
-		case 23: $ousrfield = "wepc";break;
-		case 24: $ousrfield = "eqwep";break;
-		case 25: $ousrfield = "p_equip";break;
-		case 26: $ousrfield = "spec";break;
-		case 27: $ousrfield = "rights";break;
-		case 28: $ousrfield = "organization";break;
-		case 29: $ousrfield = "status";break;
-		case 30: $ousrfield = "savings";break;
-		case 31: $ousrfield = "password";$ouservalue = md5($ouservalue);break;
-		case 32: echo "<tr><td colspan=3><center>刪除用戶的操作是不可逆的<br>請儘量使用禁用帳號功能<br></center></td></tr>";
+		case 11: $ousrfield = "atkword";break;
+		case 12: $ousrfield = "gamename";break;
+		case 13: $ousrfield = "hpmax";break;
+		case 14: $ousrfield = "enmax";break;
+		case 15: $ousrfield = "spmax";break;
+		case 16: $ousrfield = "attacking";break;
+		case 17: $ousrfield = "defending";break;
+		case 18: $ousrfield = "reacting";break;
+		case 19: $ousrfield = "targeting";break;
+		case 20: $ousrfield = "level";break;
+		case 21: $ousrfield = "expr";break;
+		case 22: $ousrfield = "wepa";break;
+		case 23: $ousrfield = "wepb";break;
+		case 24: $ousrfield = "wepc";break;
+		case 25: $ousrfield = "eqwep";break;
+		case 26: $ousrfield = "p_equip";break;
+		case 27: $ousrfield = "spec";break;
+		case 28: $ousrfield = "rights";break;
+		case 29: $ousrfield = "organization";break;
+		case 30: $ousrfield = "speech";break;
+		case 31: $ousrfield = "status";break;
+		case 32: $ousrfield = "savings";break;
+		case 33: $ousrfield = "password";$ouservalue = md5($ouservalue);break;
+		case 34: echo "<tr><td colspan=3><center>刪除用戶的操作是不可逆的<br>請儘量使用禁用帳號功能<br></center></td></tr>";
 			 echo "<tr><td colspan=3><center>請再次確認！<br></center></td></tr>";
 			 echo "<tr><td colspan=3><center><form action=manager.php?action=main method=post target=_self>";
 			 echo "<input type=hidden value='13' name=operation>";
-			 echo "<input type=hidden value='$ousername' name=ousername>";
+			 echo "<input type=hidden value='$ousername' name=ousername>";		
+			 echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+			 echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 			 echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 			 echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 			 echo "</form></center></td></tr>";
 			 exit;	
-		case 33: mysql_query("UPDATE `".$GLOBALS['DBPrefix']."phpeb_user_general_info` SET `time1` = '0',`time2` = '0',`btltime` = '0' WHERE `".$GLOBALS['DBPrefix']."phpeb_user_general_info`.`username` = '$ousername' LIMIT 1 ;");
+		case 35: mysql_query("UPDATE `".$GLOBALS['DBPrefix']."phpeb_user_general_info` SET `time1` = '0',`time2` = '0',`btltime` = '0' WHERE `".$GLOBALS['DBPrefix']."phpeb_user_general_info`.`username` = '$ousername' LIMIT 1 ;");
 			 echo "<tr><td colspan=3><center>操作完成<br></center></td></tr>";
 			 exit;
 	}
@@ -205,7 +231,7 @@ if ("12" == $_POST["operation"] ) {
 
 //刪除用戶操作
 if ("13" == $_POST["operation"] ) {
-	$ousername = $ousername;
+	$ousername = $_POST["ousername"];
 	mysql_query("DELETE FROM `".$GLOBALS['DBPrefix']."phpeb_user_general_info` WHERE `username` = '$ousername' Limit 1;");
 	mysql_query("DELETE FROM `".$GLOBALS['DBPrefix']."phpeb_user_game_info` WHERE `username` = '$ousername' Limit 1;");
 	mysql_query("DELETE FROM `".$GLOBALS['DBPrefix']."phpeb_user_bank` WHERE `username` = '$ousername' Limit 1;");
@@ -225,6 +251,8 @@ if ("2" == $_POST["operation"] ) {
 	echo "<tr><td colspan=3><center>請輸入你要操作的機體名（留空為列出所有機體）<br></center></td></tr>";
 	echo "<tr><td colspan=3><center><input type=text name='omsname' size='40' maxlength=50></center></td></tr>";
 	echo "<input type=hidden value='21' name=operation>";
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 	echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 	echo "</form></center></td></tr>";
@@ -233,7 +261,7 @@ if ("2" == $_POST["operation"] ) {
 if ("21" == $_POST["operation"] ) {
 	$omsname = $_POST["omsname"];
 	if(!$omsname) {
-		$result1 = mysql_query("SELECT id,msname,price FROM `".$GLOBALS['DBPrefix']."phpeb_sys_ms`");
+		$result1 = mysql_query("SELECT id,msname,price FROM `".$GLOBALS['DBPrefix']."phpeb_sys_ms`",$db);
 		$num_rows = mysql_num_rows($result1);
 		echo "<tr><td colspan=3><center><form action=manager.php?action=main method=post target=_self>";
 		echo "<table align=center width=400 border=\"1\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse: collapse;font-size: 10pt;\" bordercolor=\"#FFFFFF\">";
@@ -251,6 +279,8 @@ if ("21" == $_POST["operation"] ) {
 			$i++;	
 			}
 		echo "<input type=hidden value='21' name=operation>";
+		echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+		echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 		echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 		echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 		echo "</tr>";
@@ -258,7 +288,7 @@ if ("21" == $_POST["operation"] ) {
 		echo "</table>";
 		exit;
 	}
-	$result1 = mysql_query("SELECT * FROM `".$GLOBALS['DBPrefix']."phpeb_sys_ms` WHERE `msname` = '$omsname'");
+	$result1 = mysql_query("SELECT * FROM `".$GLOBALS['DBPrefix']."phpeb_sys_ms` WHERE `msname` = '$omsname'",$db);
 	$myrow1 = mysql_fetch_object($result1);
 	if (!$myrow1->id) {
 		echo "<tr><td colspan=3><center>查無此機體<br></center></td></tr>";
@@ -289,6 +319,8 @@ $omsfield = array("$myrow1->id","$myrow1->msname","$myrow1->price","$myrow1->atf
 
 	echo "<input type=hidden value='$myrow1->id' name=omsid>";
 	echo "<input type=hidden value='22' name=operation>";
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 	echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 	echo "</form></center></td></tr>";
@@ -317,7 +349,9 @@ if ("22" == $_POST["operation"] ) {
 		case 14: echo "<tr><td colspan=3><center>刪除機體的操作是不可逆的。請再次確認！<br></center></td></tr>";	
 			 echo "<tr><td colspan=3><center><form action=manager.php?action=main method=post target=_self>";
 			 echo "<input type=hidden value='23' name=operation>";
-			 echo "<input type=hidden value='$omsid' name=omsid>";
+			 echo "<input type=hidden value='$omsid' name=omsid>";		
+			 echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+			 echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 			 echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 			 echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 			 echo "</form></center></td></tr>";
@@ -342,6 +376,8 @@ if ("3" == $_POST["operation"] ) {
 	echo "<tr><td colspan=3><center>請輸入武器名（留空為列出所有武器）<br></center></td></tr>";
 	echo "<tr><td colspan=3><center><input type=text name='owepname' size='40' maxlength=50></center></td></tr>";
 	echo "<input type=hidden value='31' name=operation>";
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 	echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 	echo "</form></center></td></tr>";
@@ -351,7 +387,7 @@ if ("3" == $_POST["operation"] ) {
 if ("31" == $_POST["operation"] ) {
 	$owepname = $_POST["owepname"];
 	if(!$owepname) {
-		$result1 = mysql_query("SELECT id,name,price FROM `".$GLOBALS['DBPrefix']."phpeb_sys_wep`");
+		$result1 = mysql_query("SELECT id,name,price FROM `".$GLOBALS['DBPrefix']."phpeb_sys_wep`",$db);
 		$num_rows = mysql_num_rows($result1);
 
 		echo "<tr><td colspan=3><center><form action=manager.php?action=main method=post target=_self>";
@@ -370,6 +406,8 @@ if ("31" == $_POST["operation"] ) {
 			$i++;			
 			}
 		echo "<input type=hidden value='31' name=operation>";
+		echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+		echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 		echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 		echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 		echo "</tr>";
@@ -377,7 +415,7 @@ if ("31" == $_POST["operation"] ) {
 		echo "</table>";
 		exit;
 	}
-	$result1 = mysql_query("SELECT * FROM `".$GLOBALS['DBPrefix']."phpeb_sys_wep` WHERE `name` = '$owepname'");
+	$result1 = mysql_query("SELECT * FROM `".$GLOBALS['DBPrefix']."phpeb_sys_wep` WHERE `name` = '$owepname'",$db);
 	$myrow1 = mysql_fetch_object($result1);
 	if (!$myrow1->id) {
 		echo "<tr><td colspan=3><center>查無此武器<br></center></td></tr>";
@@ -409,6 +447,8 @@ $owepvalue = array("$myrow1->id","$myrow1->name","$myrow1->grade","$myrow1->kind
 
 	echo "<input type=hidden value='$myrow1->id' name=owepid>";
 	echo "<input type=hidden value='32' name=operation>";
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 	echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 	echo "</form></center></td></tr>";
@@ -438,7 +478,9 @@ if ("32" == $_POST["operation"] ) {
 		case 14: echo "<tr><td colspan=3><center>刪除武器的操作是不可逆的。請再次確認！<br></center></td></tr>";	
 			 echo "<tr><td colspan=3><center><form action=manager.php?action=main method=post target=_self>";
 			 echo "<input type=hidden value='33' name=operation>";
-			 echo "<input type=hidden value='$owepid' name=owepid>";
+			 echo "<input type=hidden value='$owepid' name=owepid>";		
+			 echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+			 echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 			 echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 			 echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 			 echo "</form></center></td></tr>";
@@ -464,6 +506,8 @@ if ("4" == $_POST["operation"] ) {
 	echo "<tr><td colspan=3><form action=manager.php?action=main method=post target=_self>";
 	echo "<tr><td colspan=3><center><input type=text name='otatname' size='40' maxlength=50></center></td></tr>";
 	echo "<input type=hidden value='41' name=operation>";
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 	echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 	echo "</form></td></tr>";
@@ -473,7 +517,7 @@ if ("4" == $_POST["operation"] ) {
 if ("41" == $_POST["operation"] ) {
 	$otatname = $_POST["otatname"];
 	if(!$otatname) {
-		$result1 = mysql_query("SELECT tact_id,wep_id,grade FROM `".$GLOBALS['DBPrefix']."phpeb_sys_tactfactory`");
+		$result1 = mysql_query("SELECT tact_id,wep_id,grade FROM `".$GLOBALS['DBPrefix']."phpeb_sys_tactfactory`",$db);
 		$num_rows = mysql_num_rows($result1);
 		echo "<tr><td colspan=3><center><form action=manager.php?action=main method=post target=_self>";
 		echo "<table align=center width=250 border=\"1\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse: collapse;font-size: 10pt;\" bordercolor=\"#FFFFFF\">";
@@ -491,6 +535,8 @@ if ("41" == $_POST["operation"] ) {
 			$i++;			
 			}
 		echo "<input type=hidden value='41' name=operation>";
+		echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+		echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 		echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 		echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 		echo "</tr>";
@@ -498,7 +544,7 @@ if ("41" == $_POST["operation"] ) {
 		echo "</table>";
 		exit;
 	}
-	$result1 = mysql_query("SELECT * FROM `".$GLOBALS['DBPrefix']."phpeb_sys_tactfactory` WHERE `wep_id` = '$otatname'");
+	$result1 = mysql_query("SELECT * FROM `".$GLOBALS['DBPrefix']."phpeb_sys_tactfactory` WHERE `wep_id` = '$otatname'",$db);
 	$myrow1 = mysql_fetch_object($result1);
 	if (!$myrow1->tact_id) {
 		echo "<tr><td colspan=3><center>查無此武器<br></center></td></tr>";
@@ -531,6 +577,8 @@ $otatvalue = array("$myrow1->tact_id","$myrow1->wep_id","$myrow1->grade","$myrow
 
 	echo "<input type=hidden value='$myrow1->tact_id' name=otatid>";
 	echo "<input type=hidden value='42' name=operation>";
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 	echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 	echo "</form></center></td></tr>";
@@ -571,7 +619,9 @@ if ("42" == $_POST["operation"] ) {
 		case 24: echo "<tr><td colspan=3><center>刪除公式的操作是不可逆的。請再次確認！<br></center></td></tr>";	
 			 echo "<tr><td colspan=3><center><form action=manager.php?action=main method=post target=_self>";
 			 echo "<input type=hidden value='43' name=operation>";
-			 echo "<input type=hidden value='$otatid' name=otatid>";
+			 echo "<input type=hidden value='$otatid' name=otatid>";		
+			 echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+			 echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 			 echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 			 echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 			 echo "</form></center></td></tr>";
@@ -604,6 +654,8 @@ if ("5" == $_POST["operation"] ) {
 		echo "<tr><td colspan=3><center><input type=text name='deletelv' size='20' maxlength=50>級別</center></td></tr>";
 		echo "<tr><td colspan=3><center><input type=text name='deletetime' value = 10 size='20' maxlength=50>天數</center></td></tr>";
 		echo "<input type=hidden value='5' name=operation>";
+		echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+		echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 		echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 		echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 		echo "</form></center></td></tr>";
@@ -664,6 +716,8 @@ if ("5" == $_POST["operation"] ) {
 		echo "<input type=hidden value='1' name=predel>";		
 		echo "<input type=hidden value='$deletelv' name=deletelv>";
 		echo "<input type=hidden value='$deletetime' name=deletetime>";
+		echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+		echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 		echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 		echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 		echo "</form></center></td></tr>";
@@ -709,7 +763,9 @@ if ("6" == $_POST["operation"] ) {
 	echo "<td width=150><input type=text name='newmspicdir' value = 0/ size='20' maxlength=20></td>";	
 	echo "<tr align=center><td width=100>圖片格式</td>";
 	echo "<td width=150><input type=text name='newmspicformat' value = .jpg size='20' maxlength=5></td>";
-	echo "<input type=hidden value='61' name=operation>";
+	echo "<input type=hidden value='61' name=operation>";	
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 	echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 	echo "</form></center></td></tr>";
@@ -790,7 +846,9 @@ if ("7" == $_POST["operation"] ) {
 	echo "<td width=150><input type=text name='nbounty' value = 100000 size='20' maxlength=10></td>";	
 	echo "<tr align=center><td width=100>地區</td>";
 	echo "<td width=150><input type=text name='narea' value = A1 size='20' maxlength=5></td>";
-	echo "<input type=hidden value='71' name=operation>";
+	echo "<input type=hidden value='71' name=operation>";	
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 	echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 	echo "</form></center></td></tr>";
@@ -848,7 +906,9 @@ if ("8" == $_POST["operation"] ) {
 	echo "<tr><td colspan=3><center>請輸入SQL語句<br></center></td></tr>";	
 	echo "<tr><td colspan=3><center><form action=manager.php?action=main method=post target=_self>";
 	echo "<tr><td colspan=3><center><input type=text name='sql' size='100' maxlength=400><br></center></td></tr>";
-	echo "<input type=hidden value='81' name=operation>";
+	echo "<input type=hidden value='81' name=operation>";	
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 	echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 	echo "</form></center></td></tr>";
@@ -895,7 +955,9 @@ if ("9" == $_POST["operation"] ) {
 	echo "<tr align=center><td width=100>特效</td>";
 	echo "<td width=150><input type=text name='owspec' size='20' maxlength=20></td>";		
 
-	echo "<input type=hidden value='91' name=operation>";
+	echo "<input type=hidden value='91' name=operation>";	
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 	echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 	echo "</form></center></td></tr>";
@@ -932,7 +994,7 @@ if ("A" == $_POST["operation"] ) {
 	echo "<tr><td colspan=3><center><form action=manager.php?action=main method=post target=_self>";	
 	echo "<table align=center width=250 border=\"1\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse: collapse;font-size: 10pt;\" bordercolor=\"#FFFFFF\">";
 
-	$result1 = mysql_query("SELECT tact_id,wep_id,grade FROM `".$GLOBALS['DBPrefix']."phpeb_sys_tactfactory`");
+	$result1 = mysql_query("SELECT tact_id,wep_id,grade FROM `".$GLOBALS['DBPrefix']."phpeb_sys_tactfactory`",$db);
 	$num_rows = mysql_num_rows($result1);
 
 	echo "<tr align=center><td width=100>公式ID</td>";
@@ -949,7 +1011,9 @@ if ("A" == $_POST["operation"] ) {
 	}
 
 	echo "<input type=hidden value='A1' name=operation>";
-	echo "<input type=hidden value='$num_rows' name=otid>";
+	echo "<input type=hidden value='$num_rows' name=otid>";		
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
 	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\"><br>";
 	echo "<tr><td colspan=3><center><input type=submit value='確定'></center></td></tr>";
 	echo "</form></center></td></tr>";
@@ -1003,7 +1067,6 @@ $ospeclist = array("DamA","機體損壞","DamB","戰鬥不能","MobA","加速","
 	}
 	echo "</table>";
 }
-PostFooter();
 ?>
 
 

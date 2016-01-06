@@ -1,212 +1,216 @@
 <?php
-header('Content-Type: text/html; charset=utf-8');
 $mode = ( isset($_GET['action']) ) ? $_GET['action'] : $_POST['action'];
+$IncludeLFFI = false;
 include('cfu.php');
-postHead('');
-AuthUser();
-if ($CFU_Time >= $_SESSION['timeauth']+$TIME_OUT_TIME || $_SESSION['timeauth'] <= $CFU_Time-$TIME_OUT_TIME){echo "驗證機制！<br>請重新登入！";exit;}
-GetUsrDetails("$_SESSION[username]",'Gen','Game');
+include('includes/repairplayer-f.inc.php');
+if (empty($PriTarget)) $PriTarget = 'Alpha';
+if (empty($SecTarget)) $SecTarget = 'Beta';
+if (!isset($Game_Scrn_Type)) $Game_Scrn_Type = 1;
+$additionalHeader = '<link href="images/alphaChannel.css" rel="stylesheet" type="text/css" />';
+postHead('','phpeb_session_dir',$additionalHeader);
+AuthUser("$Pl_Value[USERNAME]","$Pl_Value[PASSWORD]");
+if ($CFU_Time >= $TIMEAUTH+$TIME_OUT_TIME || $TIMEAUTH <= $CFU_Time-$TIME_OUT_TIME){echo "連線逾時！<br>請重新登入！";exit;}
+mt_srand ((double) microtime()*1000000);
 
-$Otp_Area_Sql = ("SELECT `name`,`color`,`opttime`,`optstart` FROM `".$GLOBALS['DBPrefix']."phpeb_user_organization` WHERE `optmissioni` = 'Atk=($Gen[coordinates])' AND `opttime` > '$CFU_Time' ORDER BY `optstart` ASC LIMIT 1");
-$Otp_Area_Q = mysql_query($Otp_Area_Sql) or die(mysql_error());
-$Otp_A_ITar = mysql_fetch_array($Otp_Area_Q);
+include('includes/sfo.class.php');
 
-if ($Otp_A_ITar){
-if ($Otp_A_ITar['optstart'] > $CFU_Time){
-$TimeTSSec = $Otp_A_ITar['optstart'] - $CFU_Time;
-$TimetS['hours'] = floor($TimeTSSec/3600);
-$TimetS['minutes'] = floor(($TimeTSSec - ($TimetS['hours']*3600))/60);
-$TimetS['seconds'] = floor($TimeTSSec - ($TimetS['hours']*3600) - ($TimetS['minutes']*60));
-$Otp_TellTime = "還有$TimetS[hours]小時$TimetS[minutes]分鐘$TimetS[seconds]秒開始戰爭。";
-}
-else{
-$TimeTSSec = $Otp_A_ITar['opttime'] - $CFU_Time;
-$TimetS['hours'] = floor($TimeTSSec/3600);
-$TimetS['minutes'] = floor(($TimeTSSec - ($TimetS['hours']*3600))/60);
-$TimetS['seconds'] = floor($TimeTSSec - ($TimetS['hours']*3600) - ($TimetS['minutes']*60));
-$Otp_TellTime = "還有$TimetS[hours]小時$TimetS[minutes]分鐘$TimetS[seconds]秒戰爭宣告終了。";}
-}
+$Pl = new player_stats;
+$Pl->SetUser($Pl_Value['USERNAME']);
+$Pl->FetchPlayer(true,true);
 
-if ($Otp_A_ITar && $Otp_A_ITar['optstart'] < $CFU_Time){echo "<center>此區域處於戰爭狀態，移動功能暫時關閉！<br>$Otp_TellTime";postFooter();exit;}
+if (($CFU_Time - $Pl->Player['btltime']) < $Move_Intv){echo "距離上次攻擊或移動的時間太短了！<br>請在 ".($Move_Intv-($CFU_Time - $Pl->Player['btltime']))." 秒後再移動！";exit;}
 
-if (($CFU_Time - $Gen['btltime']) < $Move_Intv){echo "距離上次攻擊或移動的時間太短了！<br>請在 ".($Move_Intv-($CFU_Time - $Gen['btltime']))." 秒後再移動！";exit;}
-else{
-if ($Gen['msuit']){
-        $Pl_Repaired = AutoRepair("$Gen[username]");
-        $Game['hp'] = $Pl_Repaired['hp'];
-        $Game['en'] = $Pl_Repaired['en'];
-        $Game['sp'] = $Pl_Repaired['sp'];
-        $Game['status'] = $Pl_Repaired['status'];
-        }
-else {echo "<center>你沒有機體，不能移動。";postFooter();exit;}
-if ($Game['status']){echo "<center>修理中，無法移動。";postFooter();exit;}
-}
+if ($Pl->Player['msuit']){
+	$Pl->ProcessAllWeapon();
+	$Pl_Repaired = RepairPlayer($Pl->Player,$Pl->Eq['D'],$Pl->Eq['E']);
+	$Pl->Player['hp'] = $Pl_Repaired['hp'];
+	$Pl->Player['en'] = $Pl_Repaired['en'];
+	$Pl->Player['sp'] = $Pl_Repaired['sp'];
+	$Pl->Player['status'] = $Pl_Repaired['status'];
+	$t_now = $Pl->Player['time1'] = $Pl_Repaired['time1'];
+	if ($Pl->Player['status']){echo "修理中，無法移動。";postFooter();exit;}
+}else {echo "<center>你沒有機體，不能移動。";postFooter();exit;}
 
 
+//$AreaLandForm = ReturnMType($Area["Sys"]["type"]);
 
-$Area = ReturnMap("$Gen[coordinates]");
-$AreaLandForm = ReturnMType($Area["Sys"]["type"]);
-
-if ($Game['organization'])
-$Pl_Org = ReturnOrg("$Game[organization]");
+if ($Pl->Player['organization'])
+$Pl_Org = ReturnOrg($Pl->Player['organization']);
 //Special Commands GUI
 if ($mode=='Move' && $actionb == 'A'){
-        echo "<font style=\"font-size: 12pt\">移動</font>";
-        echo "<hr width=80% style=\"filter:alpha(opacity=100,finishopacity=40,style=2)\">";   
 
-        echo "<form action=map.php?action=Move method=post name=mainform>";
-        echo "<input type=hidden value='Process' name=actionb>";
-        echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\">";
-        
-        
-        echo "<table align=center border=\"1\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse: collapse;font-size: 10pt;\" bordercolor=\"#FFFFFF\">";
+	echo "<style type=\"text/css\">.pointHand{cursor: pointer}</style>";
+	echo "<script language=\"JavaScript\">";
+	echo "function focusZ(elm){";
+	echo "document.getElementById(elm).style.zIndex = 2;";
+	echo "}";
+	echo "function blurZ(elm){";
+	echo "document.getElementById(elm).style.zIndex = 1;";
+	echo "}";
+	echo "function setLayer(posX,posY,Width,Height,msgText){";
+	echo "	var X = posX + document.body.scrollLeft + 10;";
+	echo "	var Y = posY + document.body.scrollTop + 10;";
+	echo "	if(eval(posX + Width + 30) > document.body.clientWidth){";
+	echo "		X = eval(posX - Width + document.body.scrollLeft - 20);";
+	echo "	}if(eval(posY + Height + 30) > document.body.clientHeight){";
+	echo "		Y = eval(posY - Height + document.body.scrollTop - 20);";
+	echo "	}if(X<0){";
+	echo "		X = 0;";
+	echo "	}if(Y<0){";
+	echo "		Y = 0;";
+	echo "	}";
+	echo "	tmpTxt = eval(msgText);";
+	echo "	document.getElementById(\"mapinfo\").style.width = Width;";
+	echo "	document.getElementById(\"mapinfo\").style.height = 'auto';";
+	echo "	document.getElementById(\"mapinfo\").style.backgroundColor = \"ffffdd\";";
+	echo "	document.getElementById(\"mapinfo\").style.padding = 10;";
+	echo "	document.getElementById(\"mapinfo\").innerHTML = tmpTxt;";
+	echo "	document.getElementById(\"mapinfo\").style.border = \"solid 1px #000000\";";
+	echo "	document.getElementById(\"mapinfo\").style.left = X;";
+	echo "	document.getElementById(\"mapinfo\").style.top  = Y;";
+	echo "}function offLayer(){";
+	echo "	document.getElementById(\"mapinfo\").style.width = 0;";
+	echo "	document.getElementById(\"mapinfo\").style.height = 0;";
+	echo "	document.getElementById(\"mapinfo\").innerHTML = \"\";";
+	echo "	document.getElementById(\"mapinfo\").style.backgroundColor = \"transparent\";";
+	echo "	document.getElementById(\"mapinfo\").style.border = 0;";
+	echo "}";
+	echo "function modifyMap(state){";
+	echo "var state = parseInt(state);";
+	echo "var elm = document.getElementById('mapTable');";
+	echo "	switch(state){";
+	echo "		case 0: elm.className = 'AlphaChan';break;";
+	echo "		case 1: elm.className = 'NormChan';break;";
+	echo "		case 2: elm.className = 'HideChan';break;";
+	echo "	}";
+	echo "}";
+	echo "</script>";
 
-        echo "<tr><td align=left width=250><b style=\"font-size: 10pt;\">現在位置: $AreaLandForm </b></td></tr>";
-        echo "<tr><td align=center>";
-        echo "<div align=left><b>宇宙地圖:</b></div>";
+	echo "<font style=\"font-size: 12pt\">移動</font>";
+	printTHR();
 
-
-
-echo "<table align=center border=0 background=\"unitimg/space.gif\" cellpadding=\"0\" cellspacing=\"0\" style=\"color: white; border-collapse: collapse bordercolor=#111111\" width=90% id=AutoNumber1 height=90%>";
-echo "<tr align=center valign=center>";
-
-//Start Non Intelligent mode
-
-
-$Area = ReturnMap("$Gen[coordinates]");
-//$Area_Org = ReturnOrg($Area["User"]["occupied"]);
-
-//$Movements = explode("\n",$Area["Sys"]["movement"]);
-
-echo "</tr><tr align=center valign=center>";
-
-
-echo "<td width=100 align=center style=\"background: ". $C1_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(C1)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='C1'><br>所羅門宇宙海(C1)</td>";
-echo "<td width=100 align=right style=\"background: ". $A2_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(A2)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='A2'><br>火星基地(A2)</td>";
-echo "<td width=120 align=right style=\"background: ". $A3_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(A3)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='A3'><br>L3-X18999(A3)</td>";
-
-echo "</tr><tr align=center valign=center>";
-
-echo "<td width=100 align=left style=\"background: ". $B1_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(B1)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='B1'><br>阿·巴瓦·庫(B1)</td>";
-echo "<td width=70 align=right style=\"background: ". $B2_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(B2)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='B2'><br>SIDE3(B2)</td>";
-echo "<td width=100 style=\"background: ". $B3_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(B3)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='B3'><br>邁錫尼帝國(B3)</td>";
-
-echo "</tr><tr align=center valign=center>";
-
-echo "<td width=100 align=right style=\"background= ". $A1_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(A1)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='A1'><br>馮布朗市(A1)</td>";
-echo "<td width=100 valign=top align=right style=\"background: ". $C2_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(C2)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='C2'><br>茨之園(C2)</td>";
-echo "<td width=130 align=right style=\"background: ". $C3_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(C3)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='C3'><br>天頂星帝國(C3)</td>";
-echo "</tr></table>";
-
-echo "<table align=center border=1 cellpadding=\"0\" cellspacing=\"0\" style=\"color: white; border-collapse: collapse bordercolor=#111111\" width=90% id=AutoNumber1 height=90%>";
-echo "<tr align=center valign=center>";
-echo "<td width=33% align=left style=\"background= ". $E1_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(E1)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='E1'><br>進入太空(E1)</td>";
-echo "<td width=33% align=right style=\"background: ". $E2_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(E2)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='E2'><br>降落地球(E2)</td>";
-echo "</tr></table>";
-
-/*echo "<tr><td align=center>";
+	echo "<form action=map.php?action=Move method=post name=mainform>";
+	echo "<input type=hidden value='Process' name=actionb>";
+	echo "<input type=hidden name=destination value=''>";
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
+	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\">";
+	
+	
+	echo "<table align=center border=\"1\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse: collapse;font-size: 10pt; border-color: #FFFFFF\">";
+	echo "<tr><td align=left width=250><b style=\"font-size: 10pt;\">從 {$Pl->Player[coordinates]} 移動的可能性: </b></td></tr>";
+	echo "<tr><td align=center>";
 	echo "<div align=left><b>世界地圖:</b></div>";
 
 
-echo "<table align=center border=0 background=\"unitimg/earth.gif\" cellpadding=\"0\" cellspacing=\"0\" style=\"color: white; border-collapse: collapse bordercolor=#111111\" width=90% id=AutoNumber1 height=90%>";
-echo "<tr align=center valign=center>";
 
-//Start Non Intelligent mode
+	echo "<table align=center border=0 cellpadding=0 cellspacing=0 style=\"color: white; border-collapse: collapse; border-color: #111111\" width=90% height=90%>";
+	echo "<tr align=center valign=center><td style=\"background:black url($General_Image_Dir/background/map_bg_s.png)\">";
+	
+	$Pl->Area = ReturnMap($Pl->Player['coordinates']);
+	
+	$Areas = array(
+	'A1N', 'A1E', 'A1S', 'A1W',
+	'A2N', 'A2E', 'A2S', 'A2W',
+	'A3N', 'A3E', 'A3S', 'A3W',
+	'B1N', 'B1E', 'B1S', 'B1W',
+	'B2N', 'B2E', 'B2S', 'B2W',
+	'B3N', 'B3E', 'B3S', 'B3W',
+	'C1N', 'C1E', 'C1S', 'C1W',
+	'C2N', 'C2E', 'C2S', 'C2W',
+	'C3N', 'C3E', 'C3S', 'C3W');
+	
+	$A_Inf = $O_Inf = array();
+	$LastOrg = 'none';
+	$b = 0;
+	$PlayerCount = array();
 
+	
+	foreach($Areas as $a){
+		$A_Inf[$a] = ReturnMap($a);
+		$PlayerCount[$a] = 0;
+		if($A_Inf[$a]['User']['occupied'] != $LastOrg){
+			$O_Inf[$a] = ReturnOrg($A_Inf[$a]['User']['occupied']);
+			$LastOrg = $A_Inf[$a]['User']['occupied'];
+		}else $O_Inf[$a] = $O_Inf[$b];
+		
+		$b = $a;
+	}
 
-$Area = ReturnMap("$Gen[coordinates]");
-//$Area_Org = ReturnOrg($Area["User"]["occupied"]);
+	$sql = ("SELECT `coordinates`, COUNT( `coordinates` ) AS `count` FROM `".$GLOBALS['DBPrefix']."phpeb_user_general_info` GROUP BY `coordinates`;");
+	$query = mysql_query($sql);
+	while( $results = mysql_fetch_array($query) ){
+		$PlayerCount[$results['coordinates']] = $results['count'];
+	}
 
-//$Movements = explode("\n",$Area["Sys"]["movement"]);
+		$Tbl_i = array(
+				array('C1W','C1N','C2W','C2N','C3W','C3N'),
+				array('C1S','C1E','C2S','C2E','C3S','C3E'),
+				array('B1W','B1N','B2W','B2N','B3W','B3N'),
+				array('B1S','B1E','B2S','B2E','B3S','B3E'),
+				array('A1W','A1N','A2W','A2N','A3W','A3N'),
+				array('A1S','A1E','A2S','A2E','A3S','A3E')
+		);
+		
+		echo "<table align=center border=0 cellpadding=0 cellspacing=0 class='AlphaChan' width=420 height=312 id='mapTable'>";
+		
+			foreach($Tbl_i as $i_r){
+				echo "<tr>";
+				foreach($i_r as $i_c => $a_id){
+					$MType = ReturnMType($A_Inf[$a_id]['Sys']['type']);
+					echo "<span id=MapDiscription_".$a_id." style=\"visibility: hidden; position: absolute;\">";
+					echo $A_Inf[$a_id]['User']['aname']." ($MType)<br>&nbsp;&nbsp;&nbsp;軍力: ".$A_Inf[$a_id]['User']['tickets'];
+					echo "<br>&nbsp;&nbsp;&nbsp;所屬國: ".$O_Inf[$a_id]['name'];
+					echo "<br>&nbsp;&nbsp;&nbsp;區域人數: ".$PlayerCount[$a_id];
+					echo "</span>";
+					$cursor = 'default';
+					$dis = 'return false;';
+					$border = '';
+					$label = "<span style='background: black; width: 30px'>$a_id</span>";
+					if(strpos($Pl->Area['Sys']['movement'],$A_Inf[$a_id]['Sys']['area']) !== false || ($Pl->Area['Sys']['area'] == $A_Inf[$a_id]['Sys']['area'] && $Pl->Player['coordinates'] != $a_id)){
+						$dis = "mainform.destination.value='$a_id';mainform.moveBtn.disabled=false;mainform.moveBtn.value='移動往$a_id';";
+						$cursor = 'pointer';
+					}
+					elseif($a_id == $Pl->Player['coordinates']) $border = 'border: 2px solid white;';
+					else{
+						$label = '&nbsp;';
+					}
+					printf("<td align=center width=70 height=52 style=\"background: %s;cursor: %s; %s\" onClick=\"%s\" OnMouseOver=\"setLayer(event.clientX,event.clientY,150,80,'document.getElementById(\'MapDiscription_".$a_id."\').innerHTML')\" OnMouseOut=\"offLayer()\">%s</td>",$O_Inf[$a_id]['color'],$cursor,$border,$dis,$label);
+				}
+				echo "</tr>";
+			}
+		
+		
+		
+		echo "</table>";
 
-echo "</tr><tr align=center valign=center>";
+	echo "</td></tr></table>";
+	echo "<hr width=80%><input type=submit value=(請左擊地圖挑選目的地) name=moveBtn disabled $BStyleB style=\"$BStyleA\"><br>";
+	echo "顯示國家顏色: <span onClick=\"document.getElementById('rdo0').click()\" class='pointHand'><input type='radio' name='mapCColor' value='0' onClick='modifyMap(0)' checked id=rdo0>半透明</span> ";
+	echo "<span onClick=\"document.getElementById('rdo1').click()\" class='pointHand'><input type='radio' name='mapCColor' value='1' onClick='modifyMap(1)' id=rdo1>不透明</span> ";
+	echo "<span onClick=\"document.getElementById('rdo2').click()\" class='pointHand'><input type='radio' name='mapCColor' value='2' onClick='modifyMap(2)' id=rdo2>不顯示</span> ";
+	echo "</td></tr></form></table>";
+	// Map Information Div
+	echo "<div id=mapinfo style=\"position:absolute; z-index:3;color: black;\" align=left></div>";
 
-echo "<td width=100 align=right style=\"background: ". $D1_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(D1)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='D1'><br>格陵蘭大陸(D1)</td>";
-echo "<td width=30% style=\"background: ". $D2_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(D2)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='D2'><br>設德蘭群島(D2)</td>";
-echo "<td width=120 align=right style=\"background: ". $D3_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(D3)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='D3'><br>摩爾曼斯克軍港(D3)</td>";
-
-echo "</tr><tr align=center valign=center>";
-
-echo "<td width=70 valign=bottom align=right style=\"background: ". $D4_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(D4)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='D4'><br>休斯頓基地(D4)</td>";
-echo "<td width=90 valign=top style=\"background: ". $D5_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(D5)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='D5'><br>直布羅陀海峽(D5)</td>";
-echo "<td width=40 valign=top style=\"background: ". $D6_Org[color] ."\">
-<input type=radio name=destination";
-if(!ereg('(D6)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='D6'><br>帕米爾高原(D6)</td>";
-
-echo "<td width=40 align=left style=\"background: ". $D10_Org[color] ."\">";
-if(!ereg('(D10)+',$Area["Sys"]["movement"])) echo "<img src=images/star.gif>";
-echo "<br></td>";
-echo "</tr><tr align=center valign=center>";
-
-
-echo "<td width=33% align=left style=\"background= ". $D7_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(D7)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='D7'><br>珊瑚海海域(D7)</td>";
-echo "<td width=80 align=right style=\"background: ". $D8_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(D8)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='D8'><br>乞力馬扎羅(D8)</td>";
-echo "<td width=90 style=\"background: ". $D9_Org[color] ."\"><input type=radio name=destination";
-if(!ereg('(D9)+',$Area["Sys"]["movement"])) echo " disabled";
-echo " value='D9'><br>東南亞基地(D9)</td>";
-
-echo "</tr></table>";*/
-
-echo "<tr><td align=center>";
-	echo "<div align=left><b>神秘地圖(未開放區域):</b></div>";
-
-	echo "<hr width=80% style=\"filter:alpha(opacity=100,finishopacity=40,style=2)\"><input type=submit value=移動>";
-	echo "</tr></td></form></table>";
-//End Non Intelligent Mode
 }
 elseif ($mode=='Move' && $actionb == 'Process'){
 
-$Area = ReturnMap("$Gen[coordinates]");
+$Area = ReturnMap($Pl->Player['coordinates']);
+$dest = substr($destination,0,2);
 //$Area_Org = ReturnOrg($Area["User"]["occupied"]);
-$destination = mysql_real_escape_string($destination);
-if (ereg('(D)+',$destination) && $Gen['acc_status'] != '9'){echo "您沒有權限進入禁區。";postFooter();exit;}
 if (!$destination){echo "錯誤！請先指定要移動到的目的地。";postFooter();exit;}
-if(!ereg('('.$destination.')+',$Area["Sys"]["movement"])){echo "錯誤！";postFooter();exit;}
+if(strpos($Area["Sys"]["movement"],$dest) === false && $Area['Sys']['area'] != $dest){echo "錯誤！";postFooter();exit;}
 
-        $sql = ("UPDATE `".$GLOBALS['DBPrefix']."phpeb_user_general_info` SET `coordinates` = '$destination',`btltime` = '$CFU_Time' WHERE `username` = '".$Gen['username']."' LIMIT 1");
-        $query = mysql_query($sql) or die ('無法取得組織資訊, 原因:' . mysql_error() . '<br>');
+	$sql = ("UPDATE `".$GLOBALS['DBPrefix']."phpeb_user_general_info` SET `coordinates` = '$destination',`btltime` = '$CFU_Time' WHERE `username` = '".$Pl->Player['name']."' LIMIT 1");
+	$query = mysql_query($sql) or die ('無法取得組織資訊, 原因:' . mysql_error() . '<br>');
 
-        echo "<form action=gmscrn_main.php?action=proc method=post name=frmreturn target=Alpha>";
-        echo "<p align=center style=\"font-size: 16pt\">移動完成了！<input type=submit value=\"返回\" onClick=\"parent.Beta.location.replace('gen_info.php')\"></p>";
-        echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\">";
-        echo "</form>";
+	echo "<form action=gmscrn_main.php?action=proc method=post name=frmreturn target=$PriTarget>";
+	echo "<p align=center style=\"font-size: 16pt\">移動完成了！<input type=submit value=\"返回\" onClick=\"parent.SecTarget.location.replace('gen_info.php')\"></p>";
+	echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+	echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
+	echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\">";
+	echo "</form>";
 
 }
 else {echo "未定義動作！";}

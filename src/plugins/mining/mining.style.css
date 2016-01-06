@@ -1,0 +1,57 @@
+legend{
+	color: white;
+	font-size: 12pt;
+	font-weight: Bold;
+	font-family: 微軟正黑體, 新細明體;
+}
+.fWidthC{
+	text-align: center;
+	width: 100%;
+}
+.lField{
+	text-align: center;
+	width: 90%;
+	height: 120px;
+}
+.lFieldLarge{
+	text-align: center;
+	width: 90%;
+	height: 200px;
+}
+.rField{
+	text-align: center;
+	width: 80%;
+	height: auto;
+}
+.srField{
+	text-align: center;
+	width: 80%;
+	height: 120px;
+}
+.tHeader{
+	text-align: center;
+	font-weight: Bold;
+	font-size: 10pt;
+}
+.width10{
+	text-align: center;
+	width: 12%;
+}
+.width40{
+	text-align: left;
+	width: 38%;
+}
+.width40c{
+	text-align: center;
+	width: 38%;
+}
+#scheduleTable{
+	width: 90%;
+}
+#helpTable{
+	width: 100%;
+}
+#areaInfoField{
+	width: 90%;
+	height: 150px;
+}

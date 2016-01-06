@@ -1,0 +1,107 @@
+body
+{
+	font-family: Arial, 微軟正黑體, 新細明體;
+	color: white;
+	cursor: default;
+	margin: 1px;
+	font-size: 10pt;
+	text-align: left;
+	background-color: MidnightBlue;
+}
+
+input
+{
+	border: #999 1px solid;
+	font-size: 10pt
+}
+
+#targetName
+{
+	width: 100px
+}
+
+#messageBox
+{
+	width: 480px
+}
+
+#scroll
+{
+	border: DarkGreen 1px solid;
+	position: relative;
+	width: 750px;
+	overflow: auto
+}
+
+#settings
+{
+	position: absolute;
+	right: 20px;
+	top: 4px
+}
+
+#unloadCfmBtn{
+	width: 65px
+}
+
+#autoNoteBtn{
+	width: 65px
+}
+
+.setChannel{
+	width: 32px
+}
+
+.resizeChat{
+	align: left;
+	margin: 0px;
+	width: 17px
+}
+
+.sHigh
+{
+	height: 400px
+}
+
+.sMed
+{
+	height: 200px
+}
+
+.sLow
+{
+	height: 100px
+}
+
+.announcement
+{
+	color: #E0E020;
+	text-align: center;
+	font-weight: Bold;
+	margin-left: 3px;
+	margin-bottom: 3px
+}
+
+.item
+{
+	cursor: hand;
+	color: ForestGreen;
+	margin-left: 3px;
+	margin-bottom: 3px
+}
+
+.pm
+{
+	cursor: hand;
+	color: #E0E020;
+	margin-left: 3px;
+	margin-bottom: 3px
+}
+
+.om
+{
+	cursor: hand;
+	color: #3C5AE0;
+	margin-left: 3px;
+	margin-bottom: 3px
+}
