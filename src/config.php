@@ -14,10 +14,10 @@ $WebMasterSite = 'http://v2alliance.no-ip.org/';         //網名網址, 按下 
 //Database Configs 資料庫設定
 global $DBHost, $DBUser, $DBPass, $DBName, $DBPrefix;
 
-$DBHost = 'localhost';                                   //資料庫位置, 如 localhost, 127.0.0.1, www.yourdomain.com
+$DBHost = '172.17.0.1';                                   //資料庫位置, 如 localhost, 127.0.0.1, www.yourdomain.com
 $DBUser = 'root';                                        //資料庫使用者名稱
-$DBPass = '';                                            //資料庫密碼
-$DBName = 'phpeb';                                       //資料庫名稱
+$DBPass = '1234';                                            //資料庫密碼
+$DBName = 'ebs';                                       //資料庫名稱
 $DBPrefix = 'v2a_';                                      //資料表前綴名, 安裝前請冒必更改!! 安裝後不能再更改!!
 
 //Setting Configs

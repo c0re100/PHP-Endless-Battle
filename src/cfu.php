@@ -182,14 +182,19 @@ function postHead($withoutbody='',$session_dir='phpeb_session_dir',$additionalHe
 		header("Cache-Control: no-store, no-cache, must-revalidate");
 		header("Cache-Control: post-check=0, pre-check=0", false);
 		// HTTP/1.0
+    
 		header("Pragma: no-cache");
 		session_name("php-eb_Session");
 		session_set_cookie_params(0,mktime(0,0,0,12,31,2015),"/","php-eb_Gen_Session_lv89ina");
 		session_save_path($session_dir);
 		session_start();
+    
+    /* Not applicable to PHP >= 5.3
 		session_register("session_un");
 		session_register("session_pwd");
 		session_destroy();
+    */
+    
 		echo "<html>";
 		echo "<head>";
 		echo "<meta http-equiv=\"Pragma\" content=\"no-cache\">";
