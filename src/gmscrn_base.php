@@ -297,14 +297,6 @@ if ($mode == 'proc'){
 
   echo '<link href="'.$General_Image_Dir.'/gmscrn.style.css" rel="stylesheet" type="text/css" />';
 
-  echo "<script language=\"JavaScript\">";
-  echo "if(screen.availWidth > 1440) document.body.style.backgroundImage= 'url(' + bgImgDir + '1680.jpg)';";
-  echo "else if(screen.availWidth > 1280) document.body.style.backgroundImage= 'url(' + bgImgDir + '1440.jpg)';";
-  echo "else if(screen.availWidth > 1024) document.body.style.backgroundImage= 'url(' + bgImgDir + '1280.jpg)';";
-  echo "else if(screen.availWidth > 800) document.body.style.backgroundImage= 'url(' + bgImgDir + '1024.jpg)';";
-  echo "else if(screen.availWidth <= 800) document.body.style.backgroundImage= 'url(' + bgImgDir + '800.jpg)';";
-  echo "</script>";
-
   //Left Status Bar
   echo "<table class=\"base\">";
   echo "<tr height=109 style=\"padding-left: 12px;padding-top: 8px;\" valign=top>";

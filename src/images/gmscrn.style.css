@@ -36,3 +36,32 @@ table.long {
 .empty-row {
   height: 10px;
 }
+
+@media only screen and (max-width: 800px) {
+  body {
+    background-image: url("/images/background/colony/800.jpg");
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  body {
+    background-image: url("/images/background/colony/1024.jpg");
+  }
+}
+@media only screen and (min-width: 1024px) {
+  body {
+    background-image: url("/images/background/colony/1280.jpg");
+  }
+}
+
+@media only screen and (min-width: 1280px) {
+  body {
+    background-image: url("/images/background/colony/1440.jpg");
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  body {
+    background-image: url("/images/background/colony/1680.jpg");
+  }
+}
