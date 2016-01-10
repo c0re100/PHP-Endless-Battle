@@ -1,6 +1,7 @@
-<?php
+<?php if ($mode != 'proc') { ?>
+  Invalid Action
+<?php } else {
 //php-eb Game Screen Base Unit
-if ($mode == 'proc'){
   postHead(1);
   //Assign Variables
   $User = $Pl_Value['USERNAME'];
@@ -828,10 +829,9 @@ if ($mode == 'proc'){
 
   //End Body
   echo "</body>";
-  exit;
-}
-else echo "<br><br><br>Invalid Action<br><br><br>";
+} ?>
 
+<?php
 // Functions
 function setAddStatImg($Growth, $StatReq, $Stat, &$aCollection, $Limit=150){
   global $General_Image_Dir;
@@ -864,5 +864,4 @@ function printRatioBar($current, $max) {
   return "<img src='$General_Image_Dir/neo/blue_bar.gif' width=$scaledWidth height=5>" .
          "<img src='$General_Image_Dir/neo/orange_bar.gif' width=$widthLeft height=5>";
 }
-
 ?>
