@@ -163,7 +163,7 @@ if ($mode == 'proc'){
   echo "window.SP_Stat_Req = $SP_Stat_Req";
   echo "</script>";
 
-  echo '<link href="'.$General_Image_Dir.'/gmscrn.style.css" rel="stylesheet" type="text/css" />';
+  echo '<link href="/images/gmscrn.style.css" rel="stylesheet" type="text/css" />';
   echo '<script type="text/javascript" src="/js/gmscrn_base.js"></script>';
 
   echo "<body leftmargin=\"0\" topmargin=\"0\" bgcolor=\"#000000\" text=#dcdcdc link=#dcdcdc style=\"margin:0px 0px 0px 0px;\" oncontextmenu=\"return true;\">";
