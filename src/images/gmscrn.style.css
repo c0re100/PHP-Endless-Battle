@@ -12,3 +12,23 @@ td.lowLight {
 td.highLight{
 	background: url(neo/btn_ssc_neo.gif) -100px 0px;
 }
+
+table.base {
+  border: 0;
+  cellpadding: 0;
+  cellspacing: 0;
+  border-collapse: collapse;
+  width: 200px;
+}
+
+table.long {
+  width: 300px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.center-align {
+  align: center;
+}
