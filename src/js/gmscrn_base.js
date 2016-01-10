@@ -1,10 +1,10 @@
 function cfmAddSP(iGrowth, bChk) {
-  if(bChk) return true;
+  if (bChk) return true;
   return confirm("你現在有 "+iGrowth+" 成長點數。\n要加 10點 SP 的話需要 " + window.SP_Stat_Req + "點數。\n確定嗎?");
 }
 
 function cfmAddStat(iGrowth, sStat, targetStat, rqStat, bChk) {
-  if(bChk) return true;
+  if (bChk) return true;
   targetStat = (parseInt(targetStat) + 1);
   return confirm("你現在有 "+ iGrowth +" 成長點數。\n要把"+ sStat +"加到 "+ targetStat +" 的話需要 "+ rqStat +" 點數。\n確定嗎?");
 }
@@ -67,14 +67,14 @@ function lowlightSS(elm) {
 
 var active_A = active_B = active_C = active_L = 0;
 function SetStill(elm) {
-  if(elm == 'btn1' && active_A == 0) {active_A = 1;}
-  else if(elm == 'btn1' && active_A == 1) {active_A = 0;}
-  if(elm == 'btn2' && active_B == 0) {active_B = 1;}
-  else if(elm == 'btn2' && active_B == 1) {active_B = 0;}
-  if(elm == 'btn3' && active_C == 0) {active_C = 1;}
-  else if(elm == 'btn3' && active_C == 1) {active_C = 0;}
-  if(elm == 'btnlog' && active_L == 0) {active_L = 1;}
-  else if(elm == 'btnlog' && active_L == 1) {active_L = 0;}
+  if (elm == 'btn1' && active_A == 0) {active_A = 1;}
+  else if (elm == 'btn1' && active_A == 1) {active_A = 0;}
+  if (elm == 'btn2' && active_B == 0) {active_B = 1;}
+  else if (elm == 'btn2' && active_B == 1) {active_B = 0;}
+  if (elm == 'btn3' && active_C == 0) {active_C = 1;}
+  else if (elm == 'btn3' && active_C == 1) {active_C = 0;}
+  if (elm == 'btnlog' && active_L == 0) {active_L = 1;}
+  else if (elm == 'btnlog' && active_L == 1) {active_L = 0;}
 }
 
 function menuOver(elm,tbl) {
@@ -83,10 +83,10 @@ function menuOver(elm,tbl) {
 }
 
 function menuOut(elm,tbl) {
-  if(elm == 'btn1' && active_A == 1) {return false;}
-  else if(elm == 'btn2' && active_B == 1) {return false;}
-  else if(elm == 'btn3' && active_C == 1) {return false;}
-  else if(elm == 'btnlog' && active_L == 1) {return false;}
+  if (elm == 'btn1' && active_A == 1) {return false;}
+  else if (elm == 'btn2' && active_B == 1) {return false;}
+  else if (elm == 'btn3' && active_C == 1) {return false;}
+  else if (elm == 'btnlog' && active_L == 1) {return false;}
   else {lowlightSS(elm);document.getElementById(tbl).style.right = -1250;}
 }
 
@@ -101,13 +101,13 @@ function blurZ(elm) {
 function setLayer(posX,posY,Width,Height,msgText) {
   var X = posX + document.body.scrollLeft + 10;
   var Y = posY + document.body.scrollTop + 10;
-  if(eval(posX + Width + 30) > document.body.clientWidth) {
+  if (eval(posX + Width + 30) > document.body.clientWidth) {
     X = eval(posX - Width + document.body.scrollLeft - 20);
-  }if(eval(posY + Height + 30) > document.body.clientHeight) {
+  }if (eval(posY + Height + 30) > document.body.clientHeight) {
     Y = eval(posY - Height + document.body.scrollTop - 20);
-  }if(X<0) {
+  }if (X<0) {
     X = 0;
-  }if(Y<0) {
+  }if (Y<0) {
     Y = 0;
   }
   tmpTxt = eval(msgText);
@@ -130,15 +130,56 @@ function offLayer() {
 }
 
 function proceedAddStat(typeStr) {
-  HideSTiF();
+  HideSTif ();
   document.addstat.action='statsmod.php?action=addstat';
-  document.addstat.target='$SecTarget';
+  document.addstat.target=window.SecTarget;
   document.addstat.actionb.value=typeStr;
   document.addstat.submit();
 }
 
 function failAddStat(oSubject, sMsg) {
-  if(sMsg != '') alert(sMsg);
+  if (sMsg != '') alert(sMsg);
   oSubject.visibility = 'visible';
   return false;
+}
+
+function ShowSTif () {
+  document.getElementById('STiF').style.left = 150;
+}
+
+function HideSTif () {
+  document.getElementById('STiF').style.left = -1150;
+}
+
+function SetiFT(msgText) {
+  ShowSTif ();
+  tmpTxt = eval(msgText);
+  document.getElementById("iFT").innerHTML = tmpTxt;
+}
+
+function movebattle() {
+  if (document.getElementById('status_now').innerHTML=='修理進行中') {
+    alert('修理中！');
+    return false;
+  }
+
+  var enc = parseInt(document.getElementById('EqmEnc_A').textContent)
+    + parseInt(document.getElementById('EqmEnc_D').textContent)
+    + parseInt(document.getElementById('EqmEnc_E').textContent);
+  if (enc > parseInt(document.getElementById('current_en').innerHTML)) {
+    alert('EN還未足夠！');
+    return false;
+  }
+
+  act.action='battle.php?action=battle_sel';
+  act.actionb.value='battle_sel';
+  act.target=window.SecTarget;
+  act.submit();
+}
+
+function enablerf() {
+  document.getElementById('ig_refresh_d').style.visibility='hidden';
+  document.getElementById('ig_refresh_d').style.position='absolute';
+  document.getElementById('ig_refresh_e').style.visibility='visible';
+  document.getElementById('ig_refresh_e').style.position='relative';
 }

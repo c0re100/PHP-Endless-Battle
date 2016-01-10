@@ -159,6 +159,7 @@ if ($mode == 'proc'){
   echo "<script type=\"text/JavaScript\">";
   echo "window.moveTo(0,0);";
   echo "this.window.name = '$PriTarget';";
+  echo "window.SecTarget = '$SecTarget';";
   echo "resizeTo(screen.availWidth,screen.availHeight);";
   echo "window.SP_Stat_Req = $SP_Stat_Req";
   echo "</script>";
@@ -383,30 +384,9 @@ if ($mode == 'proc'){
   //$rmAf = $rmChatAutoRefresh * 5;
 
   //Commands - JavaScript
-  echo "<script language=\"JavaScript\">",
-  "setTimeout(\"enablerf();\",2000);",
-  "function ShowSTiF(){",
-    "document.getElementById('STiF').style.left = 150;}",
-  "function HideSTiF(){",
-    "document.getElementById('STiF').style.left = -1150;}",
-  "function SetiFT(msgText){",
-    "ShowSTiF();tmpTxt = eval(msgText);",
-    "document.getElementById(\"iFT\").innerHTML = tmpTxt;}",
-  "function movebattle(){",
-    "if (document.getElementById('status_now').innerHTML=='修理進行中'){alert('修理中！'); return false;}",
-    "var enc = parseInt(eval(\"document.getElementById('EqmEnc_A').innerHTML;\"))+parseInt(eval(\"document.getElementById('EqmEnc_D').innerHTML;\"))+parseInt(eval(\"document.getElementById('EqmEnc_E').innerHTML;\"));",
-    "if(enc > parseInt(document.getElementById('current_en').innerHTML)) {alert('EN還未足夠！'); return false;}",
-    "act.action='battle.php?action=battle_sel';",
-    "act.actionb.value='battle_sel';",
-    "act.target='$SecTarget';",
-    "act.submit();}",
-  "function enablerf(){",
-    "document.getElementById('ig_refresh_d').style.visibility='hidden';",
-    "document.getElementById('ig_refresh_d').style.position='absolute';",
-    "document.getElementById('ig_refresh_e').style.visibility='visible';",
-    "document.getElementById('ig_refresh_e').style.position='relative';",
-    "}",
-  "</script>";
+  echo '<script language="JavaScript">
+    setTimeout(enablerf, 2000);
+    </script>';
 
   //Use Auto Count
   $bn = 4;
