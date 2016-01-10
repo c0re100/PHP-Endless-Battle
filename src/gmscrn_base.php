@@ -325,7 +325,7 @@ if ($mode == 'proc'){
 
   if($Player['hpmax'] > 0) $HP_Ratio = ceil(($Player['hp']/$Player['hpmax'])*125);
   else $HP_Ratio = 125;
-  printLeftMenuItem($General_Image_Dir, $Player[color],
+  printLeftMenuItem($Player[color],
     "<b color=FEFEFE>HP: &nbsp;</b><span id=current_hp>$Player[hp]</span> / <span id=max_hp>$Player[hpmax]</span> <br>" .
      "<img id=hp_bar_l src='$General_Image_Dir/neo/blue_bar.gif' width=".$HP_Ratio." height=5>" .
      "<img id=hp_bar_r src='$General_Image_Dir/neo/orange_bar.gif' width=".(125-$HP_Ratio)." height=5>"
@@ -334,7 +334,7 @@ if ($mode == 'proc'){
   //Bar 2: EN
   if($Player['enmax'] > 0) $EN_Ratio = ceil(($Player['en']/$Player['enmax'])*125);
   else $EN_Ratio = 125;
-  printLeftMenuItem($General_Image_Dir, $Player[color],
+  printLeftMenuItem($Player[color],
     "<b color=FEFEFE>EN: &nbsp;</b><span id=current_en>$Player[en]</span> / <span id=max_en>$Player[enmax]</span> <br>" .
     "<img id=en_bar_l src='$General_Image_Dir/neo/blue_bar.gif' width=".$EN_Ratio." height=5><img id=en_bar_r src='$General_Image_Dir/neo/orange_bar.gif' width=".(125-$EN_Ratio)." height=5>"
   );
@@ -342,7 +342,7 @@ if ($mode == 'proc'){
   //Bar 3: SP
   if($Player['spmax'] > 0) $SP_Ratio = ceil(($Player['sp']/$Player['spmax'])*125);
   else $SP_Ratio = 125;
-  printLeftMenuItem($General_Image_Dir, $Player[color],
+  printLeftMenuItem($Player[color],
     "<b color=FEFEFE>SP: &nbsp;</b><span id=current_sp>".round($Player['sp'])."</span> / <span id=max_sp>$Player[spmax]</span> <br>" .
     "<img id=sp_bar_l src='$General_Image_Dir/neo/blue_bar.gif' width=".$SP_Ratio." height=5><img id=sp_bar_r src='$General_Image_Dir/neo/orange_bar.gif' width=".(125-$SP_Ratio)." height=5>"
   );
@@ -351,7 +351,7 @@ if ($mode == 'proc'){
   $Show_Exp = $UserNextLvExp = $Show_Exp_Style = '';
   if ($Player['level'] >= 150) {$UserNextLvExp = false;$Show_Exp = '0';} //Hide upon 150Lv
   else {calcExp("$Player[level]");$Show_Exp = number_format($Player['expr'])." / ".number_format($UserNextLvExp);$Show_Exp_Style = ($UserNextLvExp > 10000000) ? "font-size: 8pt;font-weight: Bold" : "";
-    printLeftMenuItem($General_Image_Dir, $Player[color],
+    printLeftMenuItem($Player[color],
       "<b color=FEFEFE>EXP: &nbsp;</b> <span id=pl_expr style=\"$Show_Exp_Style\">$Show_Exp</span>" .
       "<br><img id=pl_expr_l src='$General_Image_Dir/neo/blue_bar.gif' width=".ceil(($Player['expr']/$UserNextLvExp)*124)." height=5>" .
       "<img id=pl_expr_r src='$General_Image_Dir/neo/empty_bar.gif' width=".(124-ceil(($Player['expr']/$UserNextLvExp)*124))." height=5>" .
@@ -461,12 +461,12 @@ if ($mode == 'proc'){
   }
 
   if ($Tickets){
-    printLeftMenuItem($General_Image_Dir, $Player[color],
+    printLeftMenuItem($Player[color],
       "<b color=FEFEFE>現軍力: &nbsp;</b><span id=pl_active_tickets>".number_format($Tickets)
     );
   }
   if($Operation_Details){
-    printLeftMenuItem($General_Image_Dir, $Pl_Org[color],
+    printLeftMenuItem($Pl_Org[color],
       "<b color=FEFEFE>出擊通知書</b></br>$Operation_Details"
     );
   }
@@ -1008,11 +1008,12 @@ function setAddStatImg($Growth, $StatReq, $Stat, &$aCollection, $Limit=150){
   }
 }
 
-function printLeftMenuItem($imgDir, $color, $content) {
+function printLeftMenuItem($color, $content) {
+  global $General_Image_Dir;
   echo "<table class=\"base\">";
-  echo "<tr><td style=\"background-image: url('$imgDir/neo/btn_neo_l.gif');\" width=12>&nbsp;</td><td style=\"background-image: url('$imgDir/neo/btn_neo_m.gif');background-color: $color;padding-left: 18px;\" height=30 width=175>";
+  echo "<tr><td style=\"background-image: url('$General_Image_Dir/neo/btn_neo_l.gif');\" width=12>&nbsp;</td><td style=\"background-image: url('$General_Image_Dir/neo/btn_neo_m.gif');background-color: $color;padding-left: 18px;\" height=30 width=175>";
   echo $content;
-  echo "</td><td width=13 style=\"background-image: url('$imgDir/neo/btn_neo_r.gif');\">&nbsp;</td></tr>";
+  echo "</td><td width=13 style=\"background-image: url('$General_Image_Dir/neo/btn_neo_r.gif');\">&nbsp;</td></tr>";
   echo "</table>";
   echo "<div class=\"empty-row\"></div>";
 }
