@@ -159,84 +159,9 @@ if ($mode == 'proc'){
 
   //Start Printing
   echo "<script type=\"text/JavaScript\">";
-  echo "var bgImgDir = \"$General_Image_Dir".$LandFormBg."\";";
-  echo "moveTo(0,0);";
+  echo "window.moveTo(0,0);";
   echo "this.window.name = '$PriTarget';";
   echo "resizeTo(screen.availWidth,screen.availHeight);";
-  echo "function highlightSS(elm){";
-  echo "document.getElementById(elm).className = 'highLight';";
-  echo "}";
-  echo "function lowlightSS(elm){";
-  echo "document.getElementById(elm).className = 'lowLight';";
-  echo "}";
-  echo "var active_A = active_B = active_C = active_L = 0;";
-  echo "function SetStill(elm){";
-  echo "if(elm == 'btn1' && active_A == 0){active_A = 1;}";
-  echo "else if(elm == 'btn1' && active_A == 1){active_A = 0;}";
-  echo "if(elm == 'btn2' && active_B == 0){active_B = 1;}";
-  echo "else if(elm == 'btn2' && active_B == 1){active_B = 0;}";
-  echo "if(elm == 'btn3' && active_C == 0){active_C = 1;}";
-  echo "else if(elm == 'btn3' && active_C == 1){active_C = 0;}";
-  echo "if(elm == 'btnlog' && active_L == 0){active_L = 1;}";
-  echo "else if(elm == 'btnlog' && active_L == 1){active_L = 0;}";
-  echo "}";
-  echo "function menuOver(elm,tbl){";
-  echo "var num=0;switch(elm){case 'btn1': num=125;break;case 'btn2': num=140;break;case 'btn3': num=165;case 'btnlog': num=180;break;}";
-  echo "highlightSS(elm);document.getElementById(tbl).style.right = num;";
-  echo "}";
-  echo "function menuOut(elm,tbl){";
-  echo "if(elm == 'btn1' && active_A == 1){return false;}";
-  echo "else if(elm == 'btn2' && active_B == 1){return false;}";
-  echo "else if(elm == 'btn3' && active_C == 1){return false;}";
-  echo "else if(elm == 'btnlog' && active_L == 1){return false;}";
-  echo "else {lowlightSS(elm);document.getElementById(tbl).style.right = -1250;}";
-  echo "}";
-  echo "function focusZ(elm){";
-  echo "document.getElementById(elm).style.zIndex = 2;";
-  echo "}";
-  echo "function blurZ(elm){";
-  echo "document.getElementById(elm).style.zIndex = 1;";
-  echo "}";
-  echo "function setLayer(posX,posY,Width,Height,msgText){";
-  echo "  var X = posX + document.body.scrollLeft + 10;";
-  echo "  var Y = posY + document.body.scrollTop + 10;";
-  echo "  if(eval(posX + Width + 30) > document.body.clientWidth){";
-  echo "    X = eval(posX - Width + document.body.scrollLeft - 20);";
-  echo "  }if(eval(posY + Height + 30) > document.body.clientHeight){";
-  echo "    Y = eval(posY - Height + document.body.scrollTop - 20);";
-  echo "  }if(X<0){";
-  echo "    X = 0;";
-  echo "  }if(Y<0){";
-  echo "    Y = 0;";
-  echo "  }";
-  echo "  tmpTxt = eval(msgText);";
-  echo "  document.getElementById(\"wepinfo\").style.width = Width;";
-  echo "  document.getElementById(\"wepinfo\").style.height = 'auto';";
-  echo "  document.getElementById(\"wepinfo\").style.backgroundColor = \"ffffdd\";";
-  echo "  document.getElementById(\"wepinfo\").style.padding = 10;";
-  echo "  document.getElementById(\"wepinfo\").innerHTML = tmpTxt;";
-  echo "  document.getElementById(\"wepinfo\").style.border = \"solid 1px #000000\";";
-  echo "  document.getElementById(\"wepinfo\").style.left = X;";
-  echo "  document.getElementById(\"wepinfo\").style.top  = Y;";
-  echo "}function offLayer(){";
-  echo "  document.getElementById(\"wepinfo\").style.width = 0;";
-  echo "  document.getElementById(\"wepinfo\").style.height = 0;";
-  echo "  document.getElementById(\"wepinfo\").innerHTML = \"\";";
-  echo "  document.getElementById(\"wepinfo\").style.backgroundColor = \"transparent\";";
-  echo "  document.getElementById(\"wepinfo\").style.border = 0;";
-  echo "}";
-  echo "function proceedAddStat(typeStr){";
-  echo "  HideSTiF();";
-  echo "  document.addstat.action='statsmod.php?action=addstat';";
-  echo "  document.addstat.target='$SecTarget';";
-  echo "  document.addstat.actionb.value=typeStr;";
-  echo "  document.addstat.submit();";
-  echo "}";
-  echo "function failAddStat(oSubject, sMsg){";
-  echo "  if(sMsg != '') alert(sMsg);";
-  echo "  oSubject.visibility = 'visible';";
-  echo "  return false;";
-  echo "}";
   echo "function cfmAddSP(iGrowth, bChk){";
   echo "  if(bChk) return true;";
   echo "  return confirm('你現在有 '+iGrowth+' 成長點數。\\n要加 10點 SP 的話需要 $SP_Stat_Req 點數。\\n確定嗎?');";
@@ -293,9 +218,10 @@ if ($mode == 'proc'){
   echo "  }}";
   echo "</script>";
 
-  echo "<body leftmargin=\"0\" topmargin=\"0\" bgcolor=\"#000000\" text=#dcdcdc link=#dcdcdc style=\"margin:0px 0px 0px 0px;\" oncontextmenu=\"return true;\">";
-
   echo '<link href="'.$General_Image_Dir.'/gmscrn.style.css" rel="stylesheet" type="text/css" />';
+  echo '<script type="text/javascript" src="/js/gmscrn_base.js"></script>';
+
+  echo "<body leftmargin=\"0\" topmargin=\"0\" bgcolor=\"#000000\" text=#dcdcdc link=#dcdcdc style=\"margin:0px 0px 0px 0px;\" oncontextmenu=\"return true;\">";
 
   //Left Status Bar
   echo "<table class=\"base\">";
