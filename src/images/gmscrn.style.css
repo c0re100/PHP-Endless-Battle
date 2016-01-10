@@ -37,6 +37,7 @@ table.long {
   height: 10px;
 }
 
+// TODO: fix url for different type of background. See ReturnMBg in sc-fi.inc.php
 @media only screen and (max-width: 800px) {
   body {
     background-image: url("/images/background/colony/800.jpg");
