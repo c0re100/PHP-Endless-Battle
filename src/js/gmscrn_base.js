@@ -1,3 +1,9 @@
+function cfmAddStat(iGrowth, sStat, targetStat, rqStat, bChk){
+  if(bChk) return true;
+  targetStat = (parseInt(targetStat) + 1);
+  return confirm("你現在有 "+ iGrowth +" 成長點數。\n要把"+ sStat +"加到 "+ targetStat +" 的話需要 "+ rqStat +" 點數。\n確定嗎?");
+}
+
 function highlightSS(elm){
   document.getElementById(elm).className = 'highLight';
 }

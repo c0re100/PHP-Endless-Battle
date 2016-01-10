@@ -166,11 +166,6 @@ if ($mode == 'proc'){
   echo "  if(bChk) return true;";
   echo "  return confirm('你現在有 '+iGrowth+' 成長點數。\\n要加 10點 SP 的話需要 $SP_Stat_Req 點數。\\n確定嗎?');";
   echo "}";
-  echo "function cfmAddStat(iGrowth, sStat, targetStat, rqStat, bChk){";
-  echo "  if(bChk) return true;";
-  echo "  targetStat = (parseInt(targetStat) + 1);";
-  echo "  return confirm('你現在有 '+ iGrowth +' 成長點數。\\n要把'+ sStat +'加到 '+ targetStat +' 的話需要 '+ rqStat +' 點數。\\n確定嗎?');";
-  echo "}";
   echo "function add_stat(type){";
   echo "  var iPlGrowth = parseInt(document.getElementById('pl_growth').innerHTML);";
   echo "  var iPlAtk = parseInt(document.getElementById('pl_attacking').innerHTML);";
