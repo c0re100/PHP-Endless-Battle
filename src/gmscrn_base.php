@@ -997,23 +997,6 @@ if ($mode == 'proc'){
 else echo "<br><br><br>Invalid Action<br><br><br>";
 
 // Functions
-
-function drawButton($rSpacing,$Caption,$wTitle,$actions){
-  echo "<tr><td colspan=2 height=$rSpacing style=\"font-size: 1px\" align=right>&nbsp;</td></tr>";
-  echo "<tr><td width=100></td><td class='lowLight' onClick=\"SetiFT('\'$wTitle\'');$actions\" onMouseOver=\"this.className = 'highLight';\" onMouseOut=\"this.className = 'lowLight';\" onDrag='return false;'>";
-  echo "<b style=\"font-size: 8pt;\">$Caption</b>";
-  echo "</td></tr>";
-}
-
-function drawSButton($rSpacing,$Caption,$actions,$trId = false){
-  if($rSpacing) echo "<tr><td colspan=2 height=$rSpacing style=\"font-size: 1px\" align=right>&nbsp;</td></tr>";
-  if($trId) echo "<tr id='$trId'>";
-  else echo "<tr>";
-  echo "<td width=100></td><td class='lowLight' onClick=\"$actions\" onMouseOver=\"this.className = 'highLight';\" onMouseOut=\"this.className = 'lowLight';\" onDrag='return false;'>";
-  echo "<b style=\"font-size: 8pt;\">$Caption</b>";
-  echo "</td></tr>";
-}
-
 function setAddStatImg($Growth, $StatReq, $Stat, &$aCollection, $Limit=150){
   global $General_Image_Dir;
   if ($Growth >= $StatReq && $Stat < $Limit){
