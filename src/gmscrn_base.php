@@ -155,62 +155,12 @@ if ($mode == 'proc'){
 
   //
   // View Phase
-  //
-
   //Start Printing
   echo "<script type=\"text/JavaScript\">";
   echo "window.moveTo(0,0);";
   echo "this.window.name = '$PriTarget';";
   echo "resizeTo(screen.availWidth,screen.availHeight);";
-  echo "function cfmAddSP(iGrowth, bChk){";
-  echo "  if(bChk) return true;";
-  echo "  return confirm('你現在有 '+iGrowth+' 成長點數。\\n要加 10點 SP 的話需要 $SP_Stat_Req 點數。\\n確定嗎?');";
-  echo "}";
-  echo "function add_stat(type){";
-  echo "  var iPlGrowth = parseInt(document.getElementById('pl_growth').innerHTML);";
-  echo "  var iPlAtk = parseInt(document.getElementById('pl_attacking').innerHTML);";
-  echo "  var iPlDef = parseInt(document.getElementById('pl_defending').innerHTML);";
-  echo "  var iPlRef = parseInt(document.getElementById('pl_reacting').innerHTML);";
-  echo "  var iPlTar = parseInt(document.getElementById('pl_targeting').innerHTML);";
-  echo "  var iRAt = parseInt(document.getElementById('attacking_stat_req').innerHTML);";
-  echo "  var iRDe = parseInt(document.getElementById('defending_stat_req').innerHTML);";
-  echo "  var iRRe = parseInt(document.getElementById('reacting_stat_req').innerHTML);";
-  echo "  var iRTa = parseInt(document.getElementById('targeting_stat_req').innerHTML);";
-  echo "  var oAtkLnkStyle = document.getElementById('attacking_addlink').style;";
-  echo "  var oDefLnkStyle = document.getElementById('defending_addlink').style;";
-  echo "  var oRefLnkStyle = document.getElementById('reacting_addlink').style;";
-  echo "  var oTarLnkStyle = document.getElementById('targeting_addlink').style;";
-  echo "  var oSPLnkStyle  = document.getElementById('spmax_addlink').style;";
-  echo "  var chkCfm = document.getElementById('cbDisableCfm').checked;";
-  echo "  if (type == 'at'){";
-  echo "  if (iPlAtk >= 150){return failAddStat(oAtkLnkStyle,'已達到上限！');}";
-  echo "  if (iPlGrowth < iRAt || iPlGrowth == '0'){return failAddStat(oAtkLnkStyle,'你的成長點數不足夠！');}";
-  echo "  if (cfmAddStat(iPlGrowth,'Attacking',iPlAtk,iRAt,chkCfm) == true){proceedAddStat('at');}";
-  echo "  else{return failAddStat(oAtkLnkStyle,'');}";
-  echo "  }";
-  echo "  if (type == 'de'){";
-  echo "  if (iPlDef >= 150){return failAddStat(oDefLnkStyle,'已達到上限！');}";
-  echo "  if (iPlGrowth < iRDe || iPlGrowth == '0'){return failAddStat(oDefLnkStyle,'你的成長點數不足夠！');}";
-  echo "  if (cfmAddStat(iPlGrowth,'Defending',iPlDef,iRDe,chkCfm) == true){proceedAddStat('de');}";
-  echo "  else{return failAddStat(oDefLnkStyle,'');}";
-  echo "  }";
-  echo "  if (type == 're'){";
-  echo "  if (iPlRef >= 150){return failAddStat(oRefLnkStyle,'已達到上限！');}";
-  echo "  if (iPlGrowth < iRRe || iPlGrowth == '0'){return failAddStat(oRefLnkStyle,'你的成長點數不足夠！');}";
-  echo "  if (cfmAddStat(iPlGrowth,'Reacting',iPlRef,iRRe,chkCfm) == true){proceedAddStat('re');}";
-  echo "  else{return failAddStat(oRefLnkStyle,'');}";
-  echo "  }";
-  echo "  if (type == 'ta'){";
-  echo "  if (iPlTar >= 150){return failAddStat(oTarLnkStyle,'已達到上限！');}";
-  echo "  if (iPlGrowth < iRTa || iPlGrowth == '0'){return failAddStat(oTarLnkStyle,'你的成長點數不足夠！');}";
-  echo "  if (cfmAddStat(iPlGrowth,'Targeting',iPlTar,iRTa,chkCfm) == true){proceedAddStat('ta');}";
-  echo "  else{return failAddStat(oTarLnkStyle,'');}";
-  echo "  }";
-  echo "  if (type == 'sp'){";
-  echo "  if (iPlGrowth < $SP_Stat_Req || iPlGrowth == '0'){return failAddStat(oSPLnkStyle,'你的成長點數不足夠！');}";
-  echo "  if (cfmAddSP(iPlGrowth,chkCfm) == true){proceedAddStat('sp');}";
-  echo "  else{return failAddStat(oSPLnkStyle,'');}";
-  echo "  }}";
+  echo "window.SP_Stat_Req = $SP_Stat_Req";
   echo "</script>";
 
   echo '<link href="'.$General_Image_Dir.'/gmscrn.style.css" rel="stylesheet" type="text/css" />';
