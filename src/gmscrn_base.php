@@ -157,7 +157,7 @@
   //
   // View Phase
   //Start Printing
-  echo "<script type=\"text/JavaScript\">";
+  echo '<script type="text/javascript">';
   echo "window.moveTo(0,0);";
   echo "this.window.name = '$PriTarget';";
   echo "window.SecTarget = '$SecTarget';";
@@ -384,7 +384,7 @@
   //$rmAf = $rmChatAutoRefresh * 5;
 
   //Commands - JavaScript
-  echo '<script language="JavaScript">
+  echo '<script type="text/javascript">
     setTimeout(enablerf, 2000);
     </script>';
 
@@ -669,7 +669,7 @@
   echo "</div>";
 
   // TODO: look if we can remove chatUpdate.
-  echo "<script language=\"JavaScript\">";
+  echo '<script type="text/javascript">';
   echo "var chatUpdate = 0;";
   list($hpRate, $enRate, $spRate) = getRecoverRate($Ms, $Player, $Pl);
   echo "
@@ -680,6 +680,7 @@
   echo "</script>";
 
   if ($Otp_TellTime){
+    echo '<script type="text/javascript">';
     echo "  var opt_start = $Otp_A_ITar[t_start];";
     echo "  var opt_time = $Otp_A_ITar[t_end];";
     echo "  var cfu_time = $CFU_Time;";
@@ -713,8 +714,10 @@
     echo "  document.getElementById('opt_time_display').innerHTML = '戰爭已宣告終了。';";
     echo "  document.getElementById('opt_time_display').style.color = '';";
     echo "  }}";
+    echo "</script>";
   }
 
+  echo '<script type="text/javascript">';
   echo "var ".$iChatTarget."_ref = null;";
 
   echo "function refreshWindow(){";
