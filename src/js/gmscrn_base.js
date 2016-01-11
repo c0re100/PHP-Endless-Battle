@@ -233,3 +233,33 @@ var AutoRepairJ = (function() {
 }());
 
 var timerID = setInterval(AutoRepairJ, 200);
+
+function cali_cfu_time() {
+  cfu_time++;
+  getOptTime();
+  setTimeout(cali_cfu_time, 1000);
+}
+
+function getOptTime() {
+  var opt_t = 0;
+  var opt_wh = 0;
+  var opt_wm = 0;
+  var opt_ws = 0;
+  if (opt_start > cfu_time) {
+    opt_t = opt_start - cfu_time;
+    opt_wh = Math.floor(opt_t/3600);
+    opt_wm = Math.floor((opt_t - (opt_wh*3600))/60);
+    opt_ws = Math.floor(opt_t - (opt_wh*3600) - (opt_wm*60));
+    document.getElementById('opt_time_display').innerHTML = '還有'+opt_wh+'小時'+opt_wm+'分鐘'+opt_ws+'秒開始戰爭。';
+  } else if (opt_time > cfu_time) {
+    opt_t = opt_time - cfu_time;
+    opt_wh = Math.floor(opt_t/3600);
+    opt_wm = Math.floor((opt_t - (opt_wh*3600))/60);
+    opt_ws = Math.floor(opt_t - (opt_wh*3600) - (opt_wm*60));
+    document.getElementById('opt_time_display').innerHTML = '還有'+opt_wh+'小時'+opt_wm+'分鐘'+opt_ws+'秒結束戰爭。';
+    document.getElementById('opt_time_display').style.color = 'FFFF00';
+  } else {
+    document.getElementById('opt_time_display').innerHTML = '戰爭已宣告終了。';
+    document.getElementById('opt_time_display').style.color = '';
+  }
+}

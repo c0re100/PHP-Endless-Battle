@@ -692,35 +692,6 @@
     echo "  var opt_time = $Otp_A_ITar[t_end];";
     echo "  var cfu_time = $CFU_Time;";
     echo "  cali_cfu_time();";
-    echo "  function cali_cfu_time() {";
-    echo "  cfu_time++;";
-    echo "  getOptTime();";
-    echo "  setTimeout(\"cali_cfu_time()\",1000);";
-    echo "  }";
-    echo "  function getOptTime() {";
-    echo "  var opt_t = 0;";
-    echo "  var opt_wh = 0;";
-    echo "  var opt_wm = 0;";
-    echo "  var opt_ws = 0;";
-    echo "  if (opt_start > cfu_time) {";
-    echo "  opt_t = opt_start - cfu_time;";
-    echo "  opt_wh = Math.floor(opt_t/3600);";
-    echo "  opt_wm = Math.floor((opt_t - (opt_wh*3600))/60);";
-    echo "  opt_ws = Math.floor(opt_t - (opt_wh*3600) - (opt_wm*60));";
-    echo "  document.getElementById('opt_time_display').innerHTML = '還有'+opt_wh+'小時'+opt_wm+'分鐘'+opt_ws+'秒開始戰爭。';";
-    echo "  }";
-    echo "  else if (opt_time > cfu_time) {";
-    echo "  opt_t = opt_time - cfu_time;";
-    echo "  opt_wh = Math.floor(opt_t/3600);";
-    echo "  opt_wm = Math.floor((opt_t - (opt_wh*3600))/60);";
-    echo "  opt_ws = Math.floor(opt_t - (opt_wh*3600) - (opt_wm*60));";
-    echo "  document.getElementById('opt_time_display').innerHTML = '還有'+opt_wh+'小時'+opt_wm+'分鐘'+opt_ws+'秒結束戰爭。';";
-    echo "  document.getElementById('opt_time_display').style.color = 'FFFF00';";
-    echo "  }";
-    echo "  else {";
-    echo "  document.getElementById('opt_time_display').innerHTML = '戰爭已宣告終了。';";
-    echo "  document.getElementById('opt_time_display').style.color = '';";
-    echo "  }}";
     echo "</script>";
   }
 
@@ -752,7 +723,6 @@
 
   if ($OpenChat)  echo " openChatWindow();";
   echo "  </script>";
-
 
   //End Body
   echo "</body>";
