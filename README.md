@@ -1,8 +1,7 @@
 # PHP-Endless-Battle
-Ext4! Beta v2.6(Discontinued)
 
 # INSTALLATION
-- Configure Server/Database settings(cfu.php/index.php)
+- Configure Server/Database settings(cfu.php/config.php)
 - Import a MySQL Database(install.sql) using phpMyAdmin
 - Done
 
@@ -27,3 +26,4 @@ http://forum.v2alliance.net/viewthread.php?tid=164&extra=page%3D1
 - PokeGuys (Gold Gundam......more)
 - Saren (reCAPTCHA......more)
 - Jasonlhy for his help in dockerizing.
+- j4ckcyw for refactor and Externalize js/css
