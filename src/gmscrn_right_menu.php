@@ -1,36 +1,39 @@
+<div id="right-menu" style="position: absolute; right: 0; top: 0; font-size: 8pt;">
 <?php
-  //Right Command and Status Bar
-  echo "<div style=\"position: absolute; right: 0; top: 0;\">";
-  echo "<table class=\"base\">";
-
   //Bar 1: Title
-  echo "<tr><td colspan=2 onClick=\"window.open('http://v2alliance.no-ip.org')\" style=\"cursor: pointer;background-image: url('$General_Image_Dir/neo/btn_s_neo.gif');\" width=200 height=30 align=center>";
-  echo "<b style=\"font-size: 8pt;\">php-eb &copy; 2005-2010 v2Alliance.</b>";
-  echo "</td></tr>";
+  printTable(
+    "<tr><td colspan=2 onClick=\"window.open('http://v2alliance.no-ip.org')\" style=\"cursor: pointer;background-image: url('$General_Image_Dir/neo/btn_s_neo.gif');\" width=200 height=30 align=center>" .
+    "<b>php-eb &copy; 2005-2010 v2Alliance.</b>" .
+    "</td></tr>", 0
+  );
 
   //Button 1: Pilot Status
-  echo "<tr><td colspan=2 height=5 style=\"font-size: 1px\" align=right>&nbsp;</td></tr>";
-  echo "<tr><td width=100></td><td class='lowLight' id=btn1 onClick=\"SetStill('btn1');\" onMouseOver=menuOver('btn1','PilotStat') onMouseOut=menuOut('btn1','PilotStat') onDrag='return false;'>";
-  echo "<b style=\"font-size: 8pt;\">機師狀態</b>";
-  echo "</td></tr>";
+  printTable(
+    "<tr><td width=100></td><td class='lowLight' id=btn1 onClick=\"SetStill('btn1');\" onMouseOver=menuOver('btn1','PilotStat') onMouseOut=menuOut('btn1','PilotStat') onDrag='return false;'>" .
+    "<b>機師狀態</b>" .
+    "</td></tr>", 5
+  );
 
   //Button 2: MS Status
-  echo "<tr><td colspan=2 height=3 style=\"font-size: 1px\" align=right>&nbsp;</td></tr>";
-  echo "<tr><td width=100></td><td class='lowLight' id=btn2 onClick=\"SetStill('btn2');\" onMouseOver=menuOver('btn2','MSStat') onMouseOut=menuOut('btn2','MSStat') onDrag='return false;'>";
-  echo "<b style=\"font-size: 8pt;\">機體狀態</b>";
-  echo "</td></tr>";
+  printTable(
+    "<tr><td width=100></td><td class='lowLight' id=btn2 onClick=\"SetStill('btn2');\" onMouseOver=menuOver('btn2','MSStat') onMouseOut=menuOut('btn2','MSStat') onDrag='return false;'>" .
+    "<b>機體狀態</b>" .
+    "</td></tr>", 3
+  );
 
   //Button 3: Equipment Status
-  echo "<tr><td colspan=2 height=3 style=\"font-size: 1px\" align=right>&nbsp;</td></tr>";
-  echo "<tr><td width=100></td><td class='lowLight' id=btn3 onClick=\"SetStill('btn3');\" onMouseOver=menuOver('btn3','EqStat') onMouseOut=menuOut('btn3','EqStat') onDrag='return false;'>";
-  echo "<b style=\"font-size: 8pt;\">裝備狀態</b>";
-  echo "</td></tr>";
+  printTable(
+    "<tr><td width=100></td><td class='lowLight' id=btn3 onClick=\"SetStill('btn3');\" onMouseOver=menuOver('btn3','EqStat') onMouseOut=menuOut('btn3','EqStat') onDrag='return false;'>" .
+    "<b>裝備狀態</b>" .
+    "</td></tr>", 3
+  );
 
   //Button Log: Log Display
-  echo "<tr><td colspan=2 height=3 style=\"font-size: 1px\" align=right>&nbsp;</td></tr>";
-  echo "<tr><td width=100></td><td class='lowLight' id=btnlog onClick=\"SetStill('btnlog');\" onMouseOver=menuOver('btnlog','LogDis') onMouseOut=menuOut('btnlog','LogDis') onDrag='return false;'>";
-  echo "<b style=\"font-size: 8pt;\">戰鬥紀錄</b>";
-  echo "</td></tr>";
+  printTable(
+    "<tr><td width=100></td><td class='lowLight' id=btnlog onClick=\"SetStill('btnlog');\" onMouseOver=menuOver('btnlog','LogDis') onMouseOut=menuOut('btnlog','LogDis') onDrag='return false;'>" .
+    "<b>戰鬥紀錄</b>" .
+    "</td></tr>", 3
+  );
 
   //Commands - Submission Form
   echo "<form action=nil method=post name=act target='$SecTarget' id=mainActForm>";
@@ -42,6 +45,7 @@
   echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\">";
   echo "</form>";
 
+  echo '<table class="base">';
   //Button 4: Battle
   drawButton(10,'戰鬥', '戰鬥畫面','movebattle();');
 
@@ -110,9 +114,17 @@
 if ( $Player['acc_status'] < 0 ) {
   drawButton(3,'管理', '管理',"act.action='manager.php';act.actionb.value='none';act.target='$SecTarget';act.submit();");
 }
+?>
+  </table>
+</div>
 
+<?php
+function printTable($content, $height) {
+  echo '<table class="base">';
+  echo $content;
   echo "</table>";
-  echo "</div>";
+  echo '<div style="height: ' . $height . 'px;"></div>';
+}
 
 function drawButton($rSpacing,$Caption,$wTitle,$actions){
   echo "<tr><td colspan=2 height=$rSpacing style=\"font-size: 1px\" align=right>&nbsp;</td></tr>";
