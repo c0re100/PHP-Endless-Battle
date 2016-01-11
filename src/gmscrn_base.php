@@ -187,22 +187,21 @@
   echo "<div class=\"empty-row\"></div>";
 
   //Bar 1: HP
-  //TODO: js update hp
   printLeftMenuItem($Player[color],
-    "<b color=FEFEFE>HP: &nbsp;</b><span id=current_hp>$Player[hp]</span> / <span id=max_hp>$Player[hpmax]</span> <br>" .
-    printRatioBar($Player['hp'], $Player['hpmax'])
+    "<b color=FEFEFE>HP: &nbsp;</b><span id=current_hp>$Player[hp]</span> / <span id=max_hp>$Player[hpmax]</span>" .
+    printRatioBar('hpBar', $Player['hp'], $Player['hpmax'])
   );
 
   //Bar 2: EN
   printLeftMenuItem($Player[color],
-    "<b color=FEFEFE>EN: &nbsp;</b><span id=current_en>$Player[en]</span> / <span id=max_en>$Player[enmax]</span> <br>" .
-    printRatioBar($Player['en'], $Player['enmax'])
+    "<b color=FEFEFE>EN: &nbsp;</b><span id=current_en>$Player[en]</span> / <span id=max_en>$Player[enmax]</span>" .
+    printRatioBar('enBar', $Player['en'], $Player['enmax'])
   );
 
   //Bar 3: SP
   printLeftMenuItem($Player[color],
-    "<b color=FEFEFE>SP: &nbsp;</b><span id=current_sp>".round($Player['sp'])."</span> / <span id=max_sp>$Player[spmax]</span> <br>" .
-    printRatioBar($Player['sp'], $Player['spmax'])
+    "<b color=FEFEFE>SP: &nbsp;</b><span id=current_sp>".round($Player['sp'])."</span> / <span id=max_sp>$Player[spmax]</span>" .
+    printRatioBar('spBar', $Player['sp'], $Player['spmax'])
   );
 
   //Bar 4: Exp
@@ -669,92 +668,16 @@
   echo "<iframe name=\"$ProcTarget\" src=\"about:blank\" marginheight=0 marginwidth=0 frameborder=0 height=0 width=0></iframe>";
   echo "</div>";
 
-  //Recovering Script
-  $Pl_ShowHP = floor($Player['hp']);
-  $Pl_ShowEN = floor($Player['en']);
-  $Pl_ShowSP = floor($Player['sp']);
-  $SP_RecRate = 0.004 * $Player['spmax'];  echo "<script language=\"JavaScript\">";
-  echo "var m_h = $Player[hpmax];";  // prefix "m_" for max
-  echo "var m_e = $Player[enmax];";
-  echo "var m_s = $Player[spmax];";
-  echo "var i_h = $Pl_ShowHP;";    // prefix "i_" for initial
-  echo "var i_e = $Pl_ShowEN;";
-  echo "var i_s = $Pl_ShowSP;";
-  echo "var h = $Pl_ShowHP;";    // no prefix for now
-  echo "var e = $Pl_ShowEN;";
-  echo "var s = $Pl_ShowSP;";
-  echo "var r_h = 0;";
-  echo "var r_e = 0;";
-  echo "var r_s = 0;";
+  // TODO: look if we can remove chatUpdate.
+  echo "<script language=\"JavaScript\">";
   echo "var chatUpdate = 0;";
-  echo "var sprate = $SP_RecRate;";
-  echo "var timerID;";
-  echo "TheDate = new Date();";
-  echo "var m_time=TheDate.getTime();";
-  echo "var mh_time=TheDate.getTime();";
-  echo "var me_time=TheDate.getTime();";
-  echo "var ms_time=TheDate.getTime();";
-  echo "AutoRepairJ();";
-  echo "function AutoRepairJ(){";
-  echo "TheDate2 = new Date();";
-  echo "  n_time=TheDate2.getTime();";
-  echo "  ts_h = (mh_time - n_time)/-1000;";
-  echo "  ts_e = (me_time - n_time)/-1000;";
-  echo "  ts_s = (ms_time - n_time)/-1000;";
-
-  $HP_AutoRepairType = $EN_AutoRepairType = 0;
-  if ($Ms['hprec'] >= 1) $HP_AutoRepairType = 1;//Constant HP Recovery
-  if ($Ms['hprec'] < 1 && $Ms['hprec'] >= 0.001) $HP_AutoRepairType = 2;//Percentage HP Recovery
-
-  if ($Ms['enrec'] >= 1)$EN_AutoRepairType = 1;//Constant EN Recovery
-  if ($Ms['enrec'] < 1 && $Ms['enrec'] >= 0.001) $EN_AutoRepairType = 2;//Percentage EN Recovery
-
-  switch ($HP_AutoRepairType){
-    case 1: echo "hprate = $Ms[hprec];";break;
-    case 2: echo "hprate = $Ms[hprec]*m_h;";break;
-    default: echo "hprate = 0;";break;}
-  switch ($EN_AutoRepairType){
-    case 1: echo "enrate = $Ms[enrec];";break;
-    case 2: echo "enrate = $Ms[enrec]*m_e;";break;
-    default: echo "enrate = 0;";break;}
-
-  if ($Player['hypermode'] == 2 || $Player['hypermode'] == 6) $SP_RecRate *= 2;
-
-  $EqRecHP=$EqRecEN=$PEqRecHP=$PEqRecEN='';
-  if ($Pl->Eq['D']['spec']){
-    if (strpos($Pl->Eq['D']['spec'],'HPPcRecA') !== false){$EqRecHP = " + (ts_h * (0.005 * m_h))";}
-    if (strpos($Pl->Eq['D']['spec'],'ENPcRecB') !== false){$EqRecEN = " + (ts_e * (0.015 * m_e))";}
-    elseif (strpos($Pl->Eq['D']['spec'],'ENPcRecA') !== false){$EqRecEN = " + (ts_e * (0.0075 * m_e))";}
-  }
-  if ($Pl->Eq['E']['spec']){
-    if (strpos($Pl->Eq['E']['spec'],'HPPcRecA') !== false){$PEqRecHP = " + (ts_h * (0.005 * m_h))";}
-    if (strpos($Pl->Eq['E']['spec'],'ENPcRecB') !== false){$PEqRecEN = " + ts_e * (0.015 * m_e))";}
-    elseif (strpos($Pl->Eq['E']['spec'],'ENPcRecA') !== false){$PEqRecEN = " + (ts_e * (0.0075 * m_e))";}
-  }
-  echo "  if (h < 0){h = 0;}";
-  echo "  r_h = (ts_h * hprate)".$EqRecHP.$PEqRecHP.";";
-  echo "  r_e = (ts_e * enrate)".$EqRecEN.$PEqRecEN.";";
-  echo "  r_s = (ts_s * ".$SP_RecRate.");";
-  echo "  if (h < m_h){h = i_h + r_h;}else{h = m_h;i_h = m_h;mh_time = n_time;}";
-  echo "  if (e < m_e){e = i_e + r_e;}else{e = m_e;i_e = m_e;me_time = n_time;}";
-  echo "  if (s < m_s){s = i_s + r_s;}else{s = m_s;i_s = m_s;ms_time = n_time;}";
-  echo "  if (h >= m_h && document.getElementById('status_now').innerHTML=='修理進行中')";
-  echo "  {document.getElementById('status_now').innerHTML='發進登錄可能';document.getElementById('status_now').style.color='#016CFE';}";
-  echo "  document.getElementById('current_hp').innerHTML=Math.round (h);";
-  echo "  document.getElementById('current_en').innerHTML=Math.round (e);";
-  echo "  document.getElementById('current_sp').innerHTML=Math.round (s);";
-  echo "  if(parseInt(document.getElementById('max_hp').innerHTML) > 0) {document.getElementById('hp_bar_l').width=Math.ceil (h/parseInt(document.getElementById('max_hp').innerHTML)*125);";
-  echo "  document.getElementById('hp_bar_r').width=125 - document.getElementById('hp_bar_l').width;}";
-  echo "  else document.getElementById('hp_bar_l').width=125;";
-  echo "  if(parseInt(document.getElementById('max_en').innerHTML) > 0) {document.getElementById('en_bar_l').width=Math.ceil (e/parseInt(document.getElementById('max_en').innerHTML)*125);";
-  echo "  document.getElementById('en_bar_r').width=125 - document.getElementById('en_bar_l').width;}";
-  echo "  else document.getElementById('en_bar_l').width=125;";
-  echo "  if(parseInt(document.getElementById('max_sp').innerHTML) > 0) {document.getElementById('sp_bar_l').width=Math.ceil (s/parseInt(document.getElementById('max_sp').innerHTML)*125);";
-  echo "  document.getElementById('sp_bar_r').width=125 - document.getElementById('sp_bar_l').width;}";
-  echo "  else document.getElementById('sp_bar_l').width=125;";
-  echo "  clearTimeout(timerID);";
-  echo "  timerID = setTimeout(\"AutoRepairJ()\",200);";
-  echo "  }";
+  list($hpRate, $enRate, $spRate) = getRecoverRate($Ms, $Player, $Pl);
+  echo "
+    var hpRate = $hpRate;
+    var enRate = $enRate;
+    var spRate = $spRate;
+  ";
+  echo "</script>";
 
   if ($Otp_TellTime){
     echo "  var opt_start = $Otp_A_ITar[t_start];";
@@ -833,7 +756,48 @@
 
 <?php
 // Functions
-function setAddStatImg($Growth, $StatReq, $Stat, &$aCollection, $Limit=150){
+function getRecoverRate($Ms, $Player, $Pl) {
+  $maxHp = $Player['hpmax'];
+  $maxEn = $Player['enmax'];
+  $maxSp = $Player['spmax'];
+
+  $hpRate = 0;
+  $enRate = 0;
+  $spRate = 0;
+  if ($Ms['hprec'] >= 1) {
+    //Constant HP Recovery
+    $hpRate = $Ms['hprec'];
+  } else if ($Ms['hprec'] < 1 && $Ms['hprec'] >= 0.001) {
+    //Percentage HP Recovery
+    $hpRate = $Ms['hprec'] * $maxHp;
+  }
+
+  if ($Ms['enrec'] >= 1) {
+    $enRate = $Ms['enrec'];
+  } else if ($Ms['enrec'] < 1 && $Ms['enrec'] >= 0.001) {
+    $enRate = $Ms['enrec'] * $maxEn;
+  }
+
+  $eqSpecs = array($Pl->Eq['D']['spec'], $Pl->Eq['E']['spec']);
+  foreach ($eqSpecs as $spec) {
+    if (strpos($spec,'HPPcRecA') !== false) {
+      $hpRate += 0.005 * $maxHp;
+    }
+    if (strpos($spec,'ENPcRecB') !== false) {
+      $enRate += 0.015 * $maxEn;
+    }
+    if (strpos($spec,'ENPcRecA') !== false) {
+      $enRate += 0.0075 * $maxEn;
+    }
+  }
+
+  $spRate = 0.004 * $maxSp;
+  if ($Player['hypermode'] == 2 || $Player['hypermode'] == 6) $spRate *= 2;
+
+  return array($hpRate, $enRate, $spRate);
+}
+
+function setAddStatImg($Growth, $StatReq, $Stat, &$aCollection, $Limit=150) {
   global $General_Image_Dir;
   if ($Growth >= $StatReq && $Stat < $Limit){
     $aCollection['Style'] = " cursor: pointer;";
@@ -854,14 +818,16 @@ function printLeftMenuItem($color, $content) {
   echo "<div class=\"empty-row\"></div>";
 }
 
-function printRatioBar($current, $max) {
-  $ratio = $max > 0 ? $current/$max : 1;
-  $maxWidth = 125;
-  $scaledWidth = ceil(125*$ratio);
-  $widthLeft = $maxWidth - $scaledWidth;
+function printRatioBar($id, $current, $max) {
+  $percent = 100 * ($max > 0 ? $current/$max : 1);
+
+  $leftPercentWidth = $percent . '%';
+  $rightPercentWidth = (100 - $percent) . '%';
 
   global $General_Image_Dir;
-  return "<img src='$General_Image_Dir/neo/blue_bar.gif' width=$scaledWidth height=5>" .
-         "<img src='$General_Image_Dir/neo/orange_bar.gif' width=$widthLeft height=5>";
+  return "<div id=\"$id\" style=\"width: 125px; height: 5px;\">" .
+    "<img class=\"left\" src='$General_Image_Dir/neo/blue_bar.gif' width=$leftPercentWidth height=100%>" .
+    "<img class=\"right\" src='$General_Image_Dir/neo/orange_bar.gif' width=$rightPercentWidth height=100%>" .
+    "</div>";
 }
 ?>

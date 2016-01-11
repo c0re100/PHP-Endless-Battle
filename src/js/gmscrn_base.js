@@ -78,7 +78,7 @@ function SetStill(elm) {
 }
 
 function menuOver(elm,tbl) {
-  var num=0;switch(elm) {case 'btn1': num=125;break;case 'btn2': num=140;break;case 'btn3': num=165;case 'btnlog': num=180;break;}
+  var num = 0;switch(elm) {case 'btn1': num = 125;break;case 'btn2': num = 140;break;case 'btn3': num = 165;case 'btnlog': num = 180;break;}
   highlightSS(elm);document.getElementById(tbl).style.right = num;
 }
 
@@ -131,9 +131,9 @@ function offLayer() {
 
 function proceedAddStat(typeStr) {
   HideSTif ();
-  document.addstat.action='statsmod.php?action=addstat';
-  document.addstat.target=window.SecTarget;
-  document.addstat.actionb.value=typeStr;
+  document.addstat.action='statsmod.php?action = addstat';
+  document.addstat.target = window.SecTarget;
+  document.addstat.actionb.value = typeStr;
   document.addstat.submit();
 }
 
@@ -171,9 +171,9 @@ function movebattle() {
     return false;
   }
 
-  act.action='battle.php?action=battle_sel';
+  act.action='battle.php?action = battle_sel';
   act.actionb.value='battle_sel';
-  act.target=window.SecTarget;
+  act.target = window.SecTarget;
   act.submit();
 }
 
@@ -183,3 +183,53 @@ function enablerf() {
   document.getElementById('ig_refresh_e').style.visibility='visible';
   document.getElementById('ig_refresh_e').style.position='relative';
 }
+
+var AutoRepairJ = (function() {
+  var oldTime = Date.now();
+
+  function updateRatioBar(barElement, ratio) {
+    updateRatio(barElement.querySelector('.left'), ratio);
+    updateRatio(barElement.querySelector('.right'), 1-ratio)
+
+    function updateRatio(element, ratio) {
+      element.style.width = 100 * ratio + "%";
+    }
+  }
+
+  return function() {
+    var now = Date.now();
+    var secondElapsed = (now - oldTime) / 1000;
+    oldTime = now;
+
+    // lift max if not changed
+    var maxHp = parseInt(document.querySelector('#max_hp').textContent);
+    var maxEn = parseInt(document.querySelector('#max_en').textContent);
+    var maxSp = parseInt(document.querySelector('#max_sp').textContent);
+
+    var currentHp = Math.max(0, parseInt(document.getElementById('current_hp').textContent));
+    var currentEn = parseInt(document.getElementById('current_en').textContent);
+    var currentSp = parseInt(document.getElementById('current_sp').textContent);
+
+    var recoverHp = Math.min(maxHp, currentHp + secondElapsed * hpRate);
+    var recoverEn = Math.min(maxEn, currentEn + secondElapsed * enRate);
+    var recoverSp = Math.min(maxSp, currentSp + secondElapsed * spRate);
+
+    // update
+    document.getElementById('current_hp').textContent = Math.round(recoverHp);
+    document.getElementById('current_en').textContent = Math.round(recoverSp);
+    document.getElementById('current_sp').textContent = Math.round(recoverSp);
+
+    // redraw bar
+    updateRatioBar(document.querySelector('#hpBar'), recoverHp / maxHp);
+    updateRatioBar(document.querySelector('#enBar'), recoverEn / maxEn);
+    updateRatioBar(document.querySelector('#spBar'), recoverSp / maxSp);
+
+    // update status
+    if (recoverHp == maxHp && document.getElementById('status_now').innerHTML=='修理進行中') {
+      document.getElementById('status_now').innerHTML='發進登錄可能';
+      document.getElementById('status_now').style.color='#016CFE';
+    }
+  }
+}());
+
+var timerID = setInterval(AutoRepairJ, 200);
