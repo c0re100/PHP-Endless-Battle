@@ -180,20 +180,21 @@
 
   echo "<body leftmargin=\"0\" topmargin=\"0\" bgcolor=\"#000000\" text=#dcdcdc link=#dcdcdc style=\"margin:0px 0px 0px 0px;\" oncontextmenu=\"return true;\">";
 
-  //Left Status Bar
-  echo "<table class=\"base\">";
-  echo "<tr height=109 style=\"padding-left: 12px;padding-top: 8px;\" valign=top>";
-  echo "<td style=\"background-image: url('$General_Image_Dir/neo/rt_tab_bg.jpg')\" colspan=3 width=200>";
-  echo "<font style=\"font-weight: Bold; font-size: 8pt\">機師名稱:</font><br><span style=\"background-color: black; color: $Player[color]; font-weight: Bold; width: 95%;\">&nbsp; $Player[gamename] &nbsp;</span>";
-  echo "<br><font style=\"font-weight: Bold; font-size: 8pt\">所屬組織:</font><br><span style=\"background-color: black;width: 95%\"><font style=\"color: $Pl_Org[color]; font-weight: Bold;\">&nbsp; $Pl_Org[name]</font>";
-  if ($RightsTitle)
-  echo "<font style=\"color: yellow;font-weight: Bold;\"> &nbsp;$RightsTitle</font>";
-  echo "&nbsp;($Pl_Rank) &nbsp;";
-  echo "</span>";
-  echo "<br><font style=\"font-weight: Bold; font-size: 8pt\">所在地區:</font><br><span style=\"background-color: black;width: 95%;$WarColor\"><font style=\"font-weight: Bold;\">&nbsp; $Player[coordinates] ($AreaLandForm)</font> (<font style=\"color: $AreaOrg[color]\">".$AreaOrg['name']."</font>) &nbsp;</span>";
-  echo "</td>";
-  echo "</tr>";
-  echo "</table>";
+  //Player info panel
+  echo '<div class="player-info">';
+    echo '<div>機師名稱:</div>';
+    echo "<div style=\"color: $Player[color];\">&nbsp; $Player[gamename] &nbsp;</div>";
+
+    echo '<div>所屬組織:</div>';
+    echo "<div>";
+      echo "<span style=\"color: $Pl_Org[color];\">&nbsp; $Pl_Org[name]</span>";
+      if ($RightsTitle) echo "<span style=\"color: yellow;\"> &nbsp;$RightsTitle</span>";
+      echo "&nbsp;($Pl_Rank) &nbsp;";
+    echo "</div>";
+
+    echo "<div>所在地區:</div>";
+    echo "<div $WarColor>&nbsp; $Player[coordinates] ($AreaLandForm) (<span style=\"color: $AreaOrg[color]\">".$AreaOrg['name']."</span>) &nbsp;</div>";
+  echo "</div>";
   echo "<div class=\"empty-row\"></div>";
 
   //Bar 1: HP
