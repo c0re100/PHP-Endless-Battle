@@ -204,19 +204,6 @@ function tryDamB($Pl,$Op,$VFlag,$VReq1,$VReq2){
 	else return false;
 }
 
-/*
-// Obsolete Function
-function analyzeFirstStrike($Specs, $A_Range, $B_Range){
-	if(strpos($Specs,'FirstStrike') !== false){
-		return true;
-	}
-	elseif($A_Range == 0 && $B_Range == 1 && mt_rand(0, 99) < 50){
-		return true;
-	}
-	else return false;
-}
-*/
-
 function rangeAnalysis($A_Range, $B_Range){
 	// Long-range Suppresses Short-range
 	if($A_Range == 0 && $B_Range == 1 && mt_rand(0, 99) < 50){
