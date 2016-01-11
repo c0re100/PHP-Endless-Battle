@@ -47,54 +47,44 @@
   }
 
   //Bar 5: Money
-  echo "<table class=\"base\">";
-  echo "<tr><td style=\"background-image: url('$General_Image_Dir/neo/btn_neo_l.gif');\" width=12>&nbsp;</td><td style=\"background-image: url('$General_Image_Dir/neo/btn_neo_m.gif');background-color: $Player[color];padding-left: 18px;\" height=30 width=175>";
-  echo "<b color=FEFEFE>金錢: &nbsp;</b><span id=pl_cash>".number_format($Player['cash']);
-  echo "</spam></td><td width=13 style=\"background-image: url('$General_Image_Dir/neo/btn_neo_r.gif');\">&nbsp;</td></tr>";
-  echo "</table>";
+  printleftmenuitem($Player[color],
+    "<b color=FEFEFE>金錢: &nbsp;</b><span id=pl_cash>".number_format($Player['cash'])
+  );
 
   //Bar 6: Fame / Notor
   $TypeFame = ($Player['fame'] >= 0) ? '名聲' : '惡名';
   $ShowFame = abs($Player['fame']);
-  echo "<div class=\"empty-row\"></div>";
-  echo "<table class=\"base\">";
-  echo "<tr><td style=\"background-image: url('$General_Image_Dir/neo/btn_neo_l.gif');\" width=12>&nbsp;</td><td style=\"background-image: url('$General_Image_Dir/neo/btn_neo_m.gif');background-color: $Player[color];padding-left: 18px;\" height=30 width=175>";
-  echo "<b color=FEFEFE><span id=type_fame>$TypeFame</span>: &nbsp;</b><span id=pl_fame>$ShowFame</span>";
-  echo "</td><td width=13 style=\"background-image: url('$General_Image_Dir/neo/btn_neo_r.gif');\">&nbsp;</td></tr>";
-  echo "</table>";
+  printLeftMenuItem($Player[color],
+    "<b color=FEFEFE><span id=type_fame>$TypeFame</span>: &nbsp;</b><span id=pl_fame>$ShowFame</span>"
+  );
 
   //Bar 7: Status
   $StatusShow = $StatusColor = '';
   if ($Player['msuit'])
   switch ($Player['status']){case 0: $StatusShow="發進登錄可能"; $StatusColor='#016CFE';break; case 1: $StatusShow="修理進行中"; $StatusColor='#FF2200';break;}
   else {$StatusShow = '沒有機體'; $StatusColor = '#FF2200';}
-  echo "<div class=\"empty-row\"></div>";
-  echo "<table class=\"base\">";
-  echo "<tr><td style=\"background-image: url('$General_Image_Dir/neo/btn_neo_l.gif');\" width=12>&nbsp;</td><td style=\"background-image: url('$General_Image_Dir/neo/btn_neo_m.gif');background-color: $Player[color];padding-left: 18px;\" height=30 width=175>";
-  echo "<b color=FEFEFE>機體狀態:</b>&nbsp; <b style=\"color: $StatusColor;\" id=status_now>$StatusShow</b>";
-  echo "</td><td width=13 style=\"background-image: url('$General_Image_Dir/neo/btn_neo_r.gif');\">&nbsp;</td></tr>";
-  echo "</table>";
+  printLeftMenuItem($Player[color],
+    "<b color=FEFEFE>機體狀態:</b>&nbsp; <b style=\"color: $StatusColor;\" id=status_now>$StatusShow</b>"
+  );
 
   //Bar 8: Request
   if ($Player['request']) {
-  echo "<div class=\"empty-row\"></div>";
-  echo "<table class=\"base\">";
-  echo "<form action=organization.php?action=Employ method=post name=requestOrg>";
-  echo "<input type=hidden value='C' name=actionb>";
-  echo "<input type=hidden name=actionc value=''>";
-  echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
-  echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
-  echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\">";
-  echo "<tr height=109 style=\"padding-left: 10px;padding-top: 3px\" valign=top>";
-  echo "<td style=\"background-image: url('$General_Image_Dir/neo/rt_tab_bg.jpg');\" colspan=3 width=200>";
-  echo "<span style=\"background-color:  ". $Player['color'] ."\">&nbsp;<b>邀請信</b>&nbsp;</span><br>";
-  echo "$Player[request]";
-  echo "<input type=submit onClick=\"actionc.value='Accept'\" style=\"$BStyleA\" $BStyleB value='答應'>";
-  echo "<input type=submit onClick=\"actionc.value='Refuse'\" style=\"$BStyleA\" $BStyleB value='拒絕'>";
-  echo "</form></td></tr>";
-  echo "</table>";
+    echo "<table class=\"base\">";
+    echo "<form action=organization.php?action=Employ method=post name=requestOrg>";
+    echo "<input type=hidden value='C' name=actionb>";
+    echo "<input type=hidden name=actionc value=''>";
+    echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
+    echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
+    echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\">";
+    echo "<tr height=109 style=\"padding-left: 10px;padding-top: 3px\" valign=top>";
+    echo "<td style=\"background-image: url('$General_Image_Dir/neo/rt_tab_bg.jpg');\" colspan=3 width=200>";
+    echo "<span style=\"background-color:  ". $Player['color'] ."\">&nbsp;<b>邀請信</b>&nbsp;</span><br>";
+    echo "$Player[request]";
+    echo "<input type=submit onClick=\"actionc.value='Accept'\" style=\"$BStyleA\" $BStyleB value='答應'>";
+    echo "<input type=submit onClick=\"actionc.value='Refuse'\" style=\"$BStyleA\" $BStyleB value='拒絕'>";
+    echo "</form></td></tr>";
+    echo "</table>";
   }
-
 
   //Bar 9 & 10: Tickets & Operation Notice
   $Tickets = 0;
