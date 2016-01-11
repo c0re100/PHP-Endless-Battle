@@ -698,7 +698,7 @@
   }
 ?>
   <script type="text/javascript">
-  // TODO: fix chat in docekr env
+  // TODO: fix chat in docekr env. Need to make mysqli working.
   var iChat_ref = null;
 
   function openChatWindow() {
