@@ -183,61 +183,14 @@
   //Include Left Menu
   include_once('gmscrn_left_menu.php');
 
-  //Right Command and Status Bar
-  echo "<div style=\"position: absolute; right: 0; top: 0;\">";
-  echo "<table class=\"base\">";
 
-  //Bar 1: Title
-  echo "<tr><td colspan=2 onClick=\"window.open('http://v2alliance.no-ip.org')\" style=\"cursor: pointer;background-image: url('$General_Image_Dir/neo/btn_s_neo.gif');\" width=200 height=30 align=center>";
-  echo "<b style=\"font-size: 8pt;\">php-eb &copy; 2005-2010 v2Alliance.</b>";
-  echo "</td></tr>";
-
-  //Button 1: Pilot Status
-  echo "<tr><td colspan=2 height=5 style=\"font-size: 1px\" align=right>&nbsp;</td></tr>";
-  echo "<tr><td width=100></td><td class='lowLight' id=btn1 onClick=\"SetStill('btn1');\" onMouseOver=menuOver('btn1','PilotStat') onMouseOut=menuOut('btn1','PilotStat') onDrag='return false;'>";
-  echo "<b style=\"font-size: 8pt;\">機師狀態</b>";
-  echo "</td></tr>";
-
-  //Button 2: MS Status
-  echo "<tr><td colspan=2 height=3 style=\"font-size: 1px\" align=right>&nbsp;</td></tr>";
-  echo "<tr><td width=100></td><td class='lowLight' id=btn2 onClick=\"SetStill('btn2');\" onMouseOver=menuOver('btn2','MSStat') onMouseOut=menuOut('btn2','MSStat') onDrag='return false;'>";
-  echo "<b style=\"font-size: 8pt;\">機體狀態</b>";
-  echo "</td></tr>";
-
-  //Button 3: Equipment Status
-  echo "<tr><td colspan=2 height=3 style=\"font-size: 1px\" align=right>&nbsp;</td></tr>";
-  echo "<tr><td width=100></td><td class='lowLight' id=btn3 onClick=\"SetStill('btn3');\" onMouseOver=menuOver('btn3','EqStat') onMouseOut=menuOut('btn3','EqStat') onDrag='return false;'>";
-  echo "<b style=\"font-size: 8pt;\">裝備狀態</b>";
-  echo "</td></tr>";
-
-  //Button Log: Log Display
-  echo "<tr><td colspan=2 height=3 style=\"font-size: 1px\" align=right>&nbsp;</td></tr>";
-  echo "<tr><td width=100></td><td class='lowLight' id=btnlog onClick=\"SetStill('btnlog');\" onMouseOver=menuOver('btnlog','LogDis') onMouseOut=menuOut('btnlog','LogDis') onDrag='return false;'>";
-  echo "<b style=\"font-size: 8pt;\">戰鬥紀錄</b>";
-  echo "</td></tr>";
-
-  //Commands - Submission Form
-  echo "<form action=nil method=post name=act target='$SecTarget' id=mainActForm>";
-  echo "<input type=hidden value='none' name=actionb>";
-  $OpenChat = !(( isset($_POST['noopenchat']) ) ? $_POST['noopenchat'] : 0);
-  echo "<input type=hidden value=".($OpenChat ? 0 : 1)." name=noopenchat>";
-  echo "<input type=hidden value='$Pl_Value[USERNAME]' name=Pl_Value[USERNAME]>";
-  echo "<input type=hidden value='$Pl_Value[PASSWORD]' name=Pl_Value[PASSWORD]>";
-  echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\">";
-  echo "</form>";
-
-  //$rmAf = $rmChatAutoRefresh * 5;
+  //Include Right Menu
+  include_once('gmscrn_right_menu.php');
 
   //Commands - JavaScript
   echo '<script type="text/javascript">
     setTimeout(enablerf, 2000);
     </script>';
-
-  //Include Right Menu
-  include_once('gmscrn_right_menu.php');
-
-  echo "</table>";
-  echo "</div>";
 
   //Log Display
   if ($Player['show_log_num'] > $LogEntries)
