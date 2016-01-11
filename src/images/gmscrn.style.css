@@ -1,15 +1,15 @@
 
-td.lowLight, td.highLight {
+.lowLight, .highLight {
   cursor: pointer;
   padding-top: 1px;
   width: 100px;
   height: 15px;
   text-align: center;
 }
-td.lowLight {
+.lowLight {
   background: url(neo/btn_ssc_neo.gif) 0px 0px;
 }
-td.highLight{
+.highLight{
   background: url(neo/btn_ssc_neo.gif) -100px 0px;
 }
 

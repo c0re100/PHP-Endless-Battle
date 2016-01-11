@@ -70,7 +70,7 @@
 
   //Bar 8: Request
   if ($Player['request']) {
-    echo "<table class=\"base\">";
+    echo '<table class="base">';
     echo "<form action=organization.php?action=Employ method=post name=requestOrg>";
     echo "<input type=hidden value='C' name=actionb>";
     echo "<input type=hidden name=actionc value=''>";
