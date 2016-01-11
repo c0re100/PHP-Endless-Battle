@@ -167,6 +167,7 @@
   echo '<script type="text/javascript">';
   echo "window.moveTo(0,0);";
   echo "this.window.name = '$PriTarget';";
+  echo "window.PriTarget = '$PriTarget';";
   echo "window.SecTarget = '$SecTarget';";
   echo "resizeTo(screen.availWidth,screen.availHeight);";
   echo "window.SP_Stat_Req = $SP_Stat_Req";
@@ -698,12 +699,6 @@
   echo '<script type="text/javascript">';
   echo "var ".$iChatTarget."_ref = null;";
 
-  echo "function refreshWindow() {";
-  echo "document.act.action='gmscrn_main.php?action=proc&';"
-    . "document.act.target='$PriTarget';"
-    . "document.act.noopenchat.value = 1;"
-    . "document.act.submit();";
-  echo "}";
   echo "function openChatWindow() {
     if (document.act.noopenchat.value == 0) {
       try{

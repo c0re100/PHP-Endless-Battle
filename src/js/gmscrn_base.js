@@ -263,3 +263,10 @@ function getOptTime() {
     document.getElementById('opt_time_display').style.color = '';
   }
 }
+
+function refreshWindow() {
+  document.act.action = 'gmscrn_main.php?action=proc&';
+  document.act.target = window.PriTarget;
+  document.act.noopenchat.value = 1;
+  document.act.submit();
+}
