@@ -1,3 +1,4 @@
+<div id="left-menu">
 <?php
   //Player info panel
   echo '<div class="player-info">';
@@ -182,8 +183,10 @@
     echo "</td></tr></table>";
     echo "</div>";
   }
+?>
+</div>
 
-
+<?php
 function printLeftMenuItem($color, $content) {
   global $General_Image_Dir;
   echo "<table class=\"base\">";
