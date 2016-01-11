@@ -1,6 +1,8 @@
-<?php if ($mode != 'proc') { ?>
-  Invalid Action
-<?php } else {
+<?php if ($mode != 'proc') {
+  echo 'Invalid Action';
+  exit;
+} ?>
+<?php
 //php-eb Game Screen Base Unit
   postHead(1);
   //Assign Variables
@@ -492,7 +494,6 @@
   //
   // Quick Equip Control - End
   //
-
   echo "</td></tr>";
   echo "</table>";
   echo "</div>";
@@ -649,7 +650,7 @@
   echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\">";
   echo "</form>";
   //iChat Form
-  echo "<form action=$iChatScript method=post name=iChatForm target='$iChatTarget'>";
+  echo "<form action=$iChatScript method=post name=iChatForm target='iChat'>";
   echo "<input type=hidden value='$User' name=username>";
   echo "<input type=hidden value='$Password' name=password>";
   echo "<input type=hidden name=\"TIMEAUTH\" value=\"$CFU_Time\">";
@@ -695,33 +696,23 @@
     echo "  cali_cfu_time();";
     echo "</script>";
   }
+?>
+  <script type="text/javascript">
+  // TODO: fix chat in docekr env
+  var iChat_ref = null;
 
-  echo '<script type="text/javascript">';
-  echo "var ".$iChatTarget."_ref = null;";
-
-  echo "function openChatWindow() {
+  function openChatWindow() {
     if (document.act.noopenchat.value == 0) {
-      try{
-        ".$iChatTarget."_ref = window.open('','$iChatTarget','location=1,menubar=0,toolbar=0,resizable=1,scrollbars=0,status=0,width=755,height=225');
-        document.iChatForm.submit();
-      }
-      catch(e) {}
+      iChat_ref = window.open('','iChat','location=1,menubar=0,toolbar=0,resizable=1,scrollbars=0,status=0,width=755,height=225');
+      document.iChatForm.submit();
       document.act.noopenchat.value = 1;
+    } else if (iChat_ref != null) {
+      iChat_ref.focus();
     }
-    else if (".$iChatTarget."_ref != null) {
-      try{
-        ".$iChatTarget."_ref.focus();
-      }
-      catch(e) {}
-    }
-  }";
-
-  if ($OpenChat)  echo " openChatWindow();";
-  echo "  </script>";
-
-  //End Body
-  echo "</body>";
-} ?>
+  }
+  <?php if ($OpenChat)  echo " openChatWindow();"; ?>
+  </script>
+</body>
 
 <?php
 // Functions

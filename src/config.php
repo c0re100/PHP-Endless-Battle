@@ -111,11 +111,10 @@ $ChatSave = 0;                   //聊天資訊保留秒數, 可用方程式,「
 $ChatAutoRefresh = 60;           //聊天資訊自動刷新的秒數, 建議不要少過 60 秒
 
 //Instant Chat Plugin Config - 聊天室插件設定
-global $iChatInstalled, $iChatScript, $iChatConfig, $iChatTarget;
+global $iChatInstalled, $iChatScript, $iChatConfig;
 $iChatInstalled = 1;                          //即時聊天室插件已安裝, 0: 未安裝, 1: 已安裝
 $iChatScript = 'plugins/ichat/iChat.php';	    //即時聊天室插件位置
 $iChatConfig = 'plugins/ichat/config.php';	  //即時聊天室插件 Config 位置
-$iChatTarget = 'iChat';                       //即時聊天室視窗 ID
 
 //Battle System Configs - 戰鬥系統設定
 global $Damage_MS_Bias, $Damage_MS_Sense, $Damage_Pi_Bias, $Damage_Pi_Sense, $Acc_MS_Bias, $Acc_MS_Sense, $Acc_Pi_Bias, $Acc_Pi_Sense, $Exp_Multiplier;
