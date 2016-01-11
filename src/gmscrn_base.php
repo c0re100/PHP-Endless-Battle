@@ -28,7 +28,7 @@
   $AreaLandForm = ReturnMType($Area["Sys"]["type"]);
   $LandFormBg = ReturnMBg($Area["Sys"]["type"]);
   $AreaOrg = ReturnOrg($Area["User"]["occupied"]);
-  if($Player['organization'] == $Area["User"]["occupied"]) $Pl_Org = &$AreaOrg;
+  if ($Player['organization'] == $Area["User"]["occupied"]) $Pl_Org = &$AreaOrg;
   else $Pl_Org = ReturnOrg($Player['organization']);
 
   //Ranks
@@ -73,7 +73,7 @@
   if ($Player['msuit'] == "nil") $Player['msuit'] = '0';
   $Pl->ProcessMS(true);
   $Ms = &$Pl->MS;
-  if ($Player['msuit']){
+  if ($Player['msuit']) {
     // Repair and Update
     $RepUpdateFlag = (($CFU_Time - $Player['time1']) >= 5);
     $Pl_Repaired = RepairPlayer($Pl->Player,$Pl->Eq['D'],$Pl->Eq['E'],0,0,$RepUpdateFlag);
@@ -95,7 +95,7 @@
 
   // Set Spec Sub-System: Check Requirements
   $Pl->checkSetSpec();
-  if($Pl->SetSpecID){
+  if ($Pl->SetSpecID) {
     // Include Interface
     include_once('includes/spc/spc.superclass.php');
     // Include Implementation Classes
@@ -117,7 +117,7 @@
   $Pl->generateSpecialAbilityPool();
 
   // Meta-phase Set Specs
-  if($Pl->SetSpecID) $Pl->SetSpec->metaphase();
+  if ($Pl->SetSpecID) $Pl->SetSpec->metaphase();
 
   // Pilot Hypermode Effects
   $Pl->applyEXAM();
@@ -137,9 +137,9 @@
     $Otp_Area_Sql = ("SELECT `t_start`,`t_end`,`a_org`,`b_org`,`ticket_a`,`ticket_b`,`victory` FROM `".$GLOBALS['DBPrefix']."phpeb_user_war` WHERE `mission` = 'Atk<$Player[coordinates]>' AND `t_end` > '$CFU_Time' ORDER BY `t_start` ASC LIMIT 1");
     $Otp_Area_Q = mysql_query($Otp_Area_Sql) or die(mysql_error());
     $Otp_A_ITar = mysql_fetch_array($Otp_Area_Q);
-    if ($Otp_A_ITar){
+    if ($Otp_A_ITar) {
       $WarColor = 'color: FF7575;';
-      if ($Otp_A_ITar['t_start'] >= $CFU_Time){
+      if ($Otp_A_ITar['t_start'] >= $CFU_Time) {
       $TimeTSSec = $Otp_A_ITar['t_start'] - $CFU_Time;
       $TimetS['hours'] = floor($TimeTSSec/3600);
       $TimetS['minutes'] = floor(($TimeTSSec - ($TimetS['hours']*3600))/60);
@@ -153,6 +153,13 @@
       $TimetS['seconds'] = floor($TimeTSSec - ($TimetS['hours']*3600) - ($TimetS['minutes']*60));
       $Otp_TellTime = "還有$TimetS[hours]小時$TimetS[minutes]分鐘$TimetS[seconds]秒戰爭宣告終了。";}
     }
+
+  //Behaviour Check
+  if ($Use_Behavior_Checker) {
+    include_once('includes/behavior_checker.class.php');
+    $BChecker = new BehaviorChecker($Pl, $GLOBALS['Btl_Intv'], 0, $GLOBALS['Offline_Time'], $GLOBALS['CFU_Time'], $GLOBALS['DBPrefix']);
+    $BChecker->checkInsomnia();
+  }
 
   //
   // View Phase
@@ -221,7 +228,7 @@
   echo "</table>";
 
   //Bar 8: Request
-  if ($Player['request']){
+  if ($Player['request']) {
   echo "<div class=\"empty-row\"></div>";
   echo "<table class=\"base\">";
   echo "<form action=organization.php?action=Employ method=post name=requestOrg>";
@@ -246,8 +253,8 @@
   $Operation_Details = '';
   $atkMissionFlag = 0;
 
-  if ($Pl_Org['optmissioni']){
-    if($Pl_Org['id'] == $Otp_A_ITar['a_org']) {
+  if ($Pl_Org['optmissioni']) {
+    if ($Pl_Org['id'] == $Otp_A_ITar['a_org']) {
       $Pl_Mission['mission'] = 'Atk<'.$Player['coordinates'].'>';
       $Pl_Mission['t_start'] = $Otp_A_ITar['t_start'];
       $Pl_Mission['t_end'] = $Otp_A_ITar['t_end'];
@@ -257,7 +264,7 @@
     else{
       $sql = ("SELECT `mission`,`t_start`,`t_end`,`ticket_a`,`victory` FROM `".$GLOBALS['DBPrefix']."phpeb_user_war` WHERE `war_id` = '$Pl_Org[optmissioni]' AND `t_end` > '$CFU_Time' LIMIT 1;");
       $query = mysql_query($sql);
-      if(mysql_num_rows($query) <= 0) {
+      if (mysql_num_rows($query) <= 0) {
         $sql = ("DELETE FROM `".$GLOBALS['DBPrefix']."phpeb_user_war` WHERE `war_id` = $Pl_Org[optmissioni] LIMIT 1;");
         $query = mysql_query($sql);
         $sql = ("UPDATE `".$GLOBALS['DBPrefix']."phpeb_user_organization` SET `optmissioni` = 0 WHERE `id` = $Pl_Org[id] LIMIT 1;");
@@ -266,11 +273,11 @@
       $Pl_Mission = mysql_fetch_array($query);
     }
     $Pl_Show_Mission = array();
-    if(preg_match('/Atk<([0-9a-zA-Z]+)>/',$Pl_Mission['mission'],$Pl_Show_Mission)){
-      if($Pl_Show_Mission[1] != $Player['coordinates'])  $Opt_Area = ReturnMap($Pl_Show_Mission[1]);
+    if (preg_match('/Atk<([0-9a-zA-Z]+)>/',$Pl_Mission['mission'],$Pl_Show_Mission)) {
+      if ($Pl_Show_Mission[1] != $Player['coordinates'])  $Opt_Area = ReturnMap($Pl_Show_Mission[1]);
       else $Opt_Area = $Area;
-      if($Opt_Area["User"]["occupied"] == $Area["User"]["occupied"])  $Opt_Org = $AreaOrg;
-      elseif($Opt_Area["User"]["occupied"] == $Player['organization'])$Opt_Org = $Pl_Org;
+      if ($Opt_Area["User"]["occupied"] == $Area["User"]["occupied"])  $Opt_Org = $AreaOrg;
+      elseif ($Opt_Area["User"]["occupied"] == $Player['organization'])$Opt_Org = $Pl_Org;
       else $Opt_Org = ReturnOrg($Opt_Area["User"]["occupied"]);
       $Operation_Details .= "<font style=\"font-size: 8pt;color: white\">[任務]</font><br><font style=\"font-size: 8pt;\">行動代號: $Pl_Org[operation]</font><br>";
       $Operation_Details .= "<font style=\"font-size: 10pt;color: white\">[內容] 區域攻防戰</font><br>把 <font color=$Opt_Org[color]>$Pl_Show_Mission[1]區域</font> 的 <font color=$Opt_Org[color]>敵方要塞</font> 擊破<br>或<br>殲滅 <font color=$Opt_Org[color]>$Pl_Show_Mission[1]區域</font> 中的<font color=$Opt_Org[color]>$Opt_Org[name]</font>軍力";
@@ -282,8 +289,8 @@
       $atkMissionFlag = 1;
     }
   }
-  elseif($Pl_Org['id'] != 0){
-    if($Otp_A_ITar['b_org'] == $Pl_Org['id']){
+  elseif ($Pl_Org['id'] != 0) {
+    if ($Otp_A_ITar['b_org'] == $Pl_Org['id']) {
       $Def_Area_Id = $Player['coordinates'];
       $Defend_War['t_start'] = $Otp_A_ITar['t_start'];
       $Defend_War['t_end'] = $Otp_A_ITar['t_end'];
@@ -294,19 +301,19 @@
       $query = mysql_query($sql);
       $Defend_War = mysql_fetch_array($query);
       $tmp = array();
-      if(preg_match('/Atk<([0-9a-zA-Z]+)>/', $Defend_War['mission'], $tmp)){
+      if (preg_match('/Atk<([0-9a-zA-Z]+)>/', $Defend_War['mission'], $tmp)) {
         $Def_Area_Id = $tmp[1];
       }else{
         $Def_Area_Id = '';
       }
       unset($tmp);
     }
-    if($Defend_War){
+    if ($Defend_War) {
       $A_Org = ReturnOrg($Defend_War['a_org']);
       $Operation_Details .= "<font style=\"font-size: 10pt;color: white\">[內容] 區域防禦戰</font><br>殲滅 <font color=$Pl_Org[color]>".$Def_Area_Id."區域</font> 中的<font color=$A_Org[color]>$A_Org[name]</font>軍力";
       $Operation_Details .= "<br>或<br>防止 <font color=$Pl_Org[color]>".$Def_Area_Id."區域要塞</font>,<br>於戰爭結束前被攻陷";
 
-      if($Def_Area_Id == $Player['coordinates'] && $Player['rights'] == '1' && $Defend_War['t_start'] > $CFU_Time && $Defend_War['ticket_b'] == 1)
+      if ($Def_Area_Id == $Player['coordinates'] && $Player['rights'] == '1' && $Defend_War['t_start'] > $CFU_Time && $Defend_War['ticket_b'] == 1)
         $Operation_Details .= "<br><b style=\"cursor: pointer\" onmouseover=\"this.style.color='yellow'\" onmouseout=\"this.style.color='white'\" onClick=\"SetiFT('\'調動兵力迎擊\'');act.action='city.php?action=Reinforcement';act.actionb.value='C';act.target='$SecTarget';act.submit();\"><u>調動兵力迎擊</u></b>";
 
       $Operation_Details .= "</td></tr><tr height=109 style=\"padding-left: 10px;padding-top: 3px\" valign=top><td style=\"background-image: url('$General_Image_Dir/neo/rt_tab_bg.jpg');\" colspan=3 width=200>";
@@ -317,19 +324,19 @@
     }
   }
 
-  if ($Tickets){
+  if ($Tickets) {
     printLeftMenuItem($Player[color],
       "<b color=FEFEFE>現軍力: &nbsp;</b><span id=pl_active_tickets>".number_format($Tickets)
     );
   }
-  if($Operation_Details){
+  if ($Operation_Details) {
     printLeftMenuItem($Pl_Org[color],
       "<b color=FEFEFE>出擊通知書</b></br>$Operation_Details"
     );
   }
 
 
-  if ($Otp_TellTime){
+  if ($Otp_TellTime) {
     echo "<div style=\"position: absolute; left: 0; top: 0; width: 100%; text-align: center\">";
     echo "<table class=\"base center-align\">";
     echo "<tr><td colspan=2 style=\"background-image: url('$General_Image_Dir/neo/btn_s_neo.gif');\" width=200 height=30 align=center>";
@@ -408,12 +415,12 @@
   echo "</tr><tr><td colspan=2 style=\"background-Image: url('$General_Image_Dir/neo/table_bg.gif'); border:solid #707070 1px; border-top: 0px;\" valign=top>";
     echo "<table class=\"base long center-align\">";
       $Pl_Log=GetUsrLog($User) or die ('無法取得紀錄資訊！！<br>請聯絡管理員！<br>錯誤代號: GB-001');
-      for($LogShowNum=1;$LogShowNum<=$Pl_LEnt;$LogShowNum++){
+      for($LogShowNum=1;$LogShowNum<=$Pl_LEnt;$LogShowNum++) {
         $i = 'time'.$LogShowNum;
         $j = 'log'.$LogShowNum;
         $Pl_Log[$i] = (isset($Pl_Log[$i])) ? $Pl_Log[$i] : 0;
         $Pl_Log[$j] = (isset($Pl_Log[$j])) ? $Pl_Log[$j] : '';
-        if ($Pl_Log[$i]){
+        if ($Pl_Log[$i]) {
         echo "<tr><td id=log$i style=\"font-weight: Bold\">".cfu_time_convert($Pl_Log[$i])."</td></tr>";
         echo "<tr><td id=log$j style=\"padding-left: 4px;font-size: 8pt\">$Pl_Log[$j]</td></tr>";
         }
@@ -446,7 +453,7 @@
   include_once('includes/gmscrn.eq_tips.inc.php');
 
   // Begin Transversing through List
-  foreach($Eq_Listing as $I => $V){
+  foreach($Eq_Listing as $I => $V) {
 
     // Prepare Basic Information
     prepBasixEqInfoString($Pl, $I, $W_Inf);
@@ -458,7 +465,7 @@
     printCondLevel($Pl, $I);
 
     // Print Controls
-    if($I == 'B' || $I == 'C'){
+    if ($I == 'B' || $I == 'C') {
       echo "<br>";
       $tmpBool = ($Pl->Eq[$I]['id'] != '0' && canEquipAsWep($Pl->Eq[$I]));
       printQuickEquipSpanTag($V,$I,'W','E','equip', $tmpBool, '(裝備此武器)');
@@ -466,7 +473,7 @@
       $tmpBool = ($Pl->Eq[$I]['id'] != '0' && $Pl->Eq[$I]['equip']);
       printQuickEquipSpanTag($V,$I,'E','W','equipdef', $tmpBool, '(裝上輔助裝備)');
     }
-    elseif ($I == 'D'){
+    elseif ($I == 'D') {
       echo "<br>";
       $tmpBool = ($Pl->Eq[$I]['id'] != '0' && ($Pl->Eq['B']['id'] == '0' || $Pl->Eq['C']['id'] == '0'));
       printQuickEquipSpanTag('eqwep','D','R',false,'equipdef', $tmpBool, '(卸下此裝備)');
@@ -574,7 +581,7 @@
       echo "<td width=35>+ <span id=pl_attackingf>".$Pl->PiFix['attacking']."</span></td>";
       echo "<td width=20 align=center><img src='{$Stat_Add[at][Image]}' style=\"{$Stat_Add[at][Style]}\" onClick=\"this.style.visibility='hidden';add_stat('at')\" id = 'attacking_addlink'></td>";
       $At_Show_Stat_Req = "$At_Stat_Req";
-      if($Player['attacking'] >= 150) $At_Show_Stat_Req = 'N/A';
+      if ($Player['attacking'] >= 150) $At_Show_Stat_Req = 'N/A';
       echo "<td width=30 align=center id=attacking_stat_req>$At_Show_Stat_Req</td>";
       echo "<td width=75 align=center>攻擊值</td>";
       echo "<td width=30 id=pl_attacking_sum>".($Player['attacking'] + $Pl->PiFix['attacking'])."</td>";
@@ -585,7 +592,7 @@
       echo "<td width=35>+ <span id=pl_defendingf>".$Pl->PiFix['defending']."</span></td>";
       echo "<td width=20 align=center><img src='{$Stat_Add[de][Image]}' style=\"{$Stat_Add[de][Style]}\" onClick=\"this.style.visibility='hidden';add_stat('de')\" id = 'defending_addlink'></td>";
       $De_Show_Stat_Req = "$De_Stat_Req";
-      if($Player['defending'] >= 150) $De_Show_Stat_Req = 'N/A';
+      if ($Player['defending'] >= 150) $De_Show_Stat_Req = 'N/A';
       echo "<td width=30 align=center id=defending_stat_req>$De_Show_Stat_Req</td>";
       echo "<td width=75 align=center>防禦值</td>";
       echo "<td width=30 id=pl_defending_sum>".($Player['defending'] + $Pl->PiFix['defending'])."</td>";
@@ -596,7 +603,7 @@
       echo "<td width=35>+ <span id=pl_reactingf>".$Pl->PiFix['reacting']."</span></td>";
       echo "<td width=20 align=center><img src='{$Stat_Add[re][Image]}' style=\"{$Stat_Add[re][Style]}\" onClick=\"this.style.visibility='hidden';add_stat('re')\" id = 'reacting_addlink'></td>";
       $Re_Show_Stat_Req = "$Re_Stat_Req";
-      if($Player['reacting'] >= 150) $Re_Show_Stat_Req = 'N/A';
+      if ($Player['reacting'] >= 150) $Re_Show_Stat_Req = 'N/A';
       echo "<td width=30 align=center id=reacting_stat_req>$Re_Show_Stat_Req</td>";
       echo "<td width=75 align=center>回避值</td>";
       echo "<td width=30 id=pl_reacting_sum>".($Player['reacting'] + $Pl->PiFix['reacting'])."</td>";
@@ -607,7 +614,7 @@
       echo "<td width=35>+ <span id=pl_targetingf>".$Pl->PiFix['targeting']."</span></td>";
       echo "<td width=20 align=center><img src='{$Stat_Add[ta][Image]}' style=\"{$Stat_Add[ta][Style]}\" onClick=\"this.style.visibility='hidden';add_stat('ta')\" id = 'targeting_addlink'></td>";
       $Ta_Show_Stat_Req = "$Ta_Stat_Req";
-      if($Player['targeting'] >= 150) $Ta_Show_Stat_Req = 'N/A';
+      if ($Player['targeting'] >= 150) $Ta_Show_Stat_Req = 'N/A';
       echo "<td width=30 align=center id=targeting_stat_req>$Ta_Show_Stat_Req</td>";
       echo "<td width=75 align=center>命中值</td>";
       echo "<td width=30 id=pl_targeting_sum>".($Player['targeting'] + $Pl->PiFix['targeting'])."</td>";
@@ -679,13 +686,13 @@
   ";
   echo "</script>";
 
-  if ($Otp_TellTime){
+  if ($Otp_TellTime) {
     echo '<script type="text/javascript">';
     echo "  var opt_start = $Otp_A_ITar[t_start];";
     echo "  var opt_time = $Otp_A_ITar[t_end];";
     echo "  var cfu_time = $CFU_Time;";
     echo "  cali_cfu_time();";
-    echo "  function cali_cfu_time(){";
+    echo "  function cali_cfu_time() {";
     echo "  cfu_time++;";
     echo "  getOptTime();";
     echo "  setTimeout(\"cali_cfu_time()\",1000);";
@@ -695,14 +702,14 @@
     echo "  var opt_wh = 0;";
     echo "  var opt_wm = 0;";
     echo "  var opt_ws = 0;";
-    echo "  if(opt_start > cfu_time){";
+    echo "  if (opt_start > cfu_time) {";
     echo "  opt_t = opt_start - cfu_time;";
     echo "  opt_wh = Math.floor(opt_t/3600);";
     echo "  opt_wm = Math.floor((opt_t - (opt_wh*3600))/60);";
     echo "  opt_ws = Math.floor(opt_t - (opt_wh*3600) - (opt_wm*60));";
     echo "  document.getElementById('opt_time_display').innerHTML = '還有'+opt_wh+'小時'+opt_wm+'分鐘'+opt_ws+'秒開始戰爭。';";
     echo "  }";
-    echo "  else if(opt_time > cfu_time) {";
+    echo "  else if (opt_time > cfu_time) {";
     echo "  opt_t = opt_time - cfu_time;";
     echo "  opt_wh = Math.floor(opt_t/3600);";
     echo "  opt_wm = Math.floor((opt_t - (opt_wh*3600))/60);";
@@ -720,38 +727,32 @@
   echo '<script type="text/javascript">';
   echo "var ".$iChatTarget."_ref = null;";
 
-  echo "function refreshWindow(){";
+  echo "function refreshWindow() {";
   echo "document.act.action='gmscrn_main.php?action=proc&';"
     . "document.act.target='$PriTarget';"
     . "document.act.noopenchat.value = 1;"
     . "document.act.submit();";
   echo "}";
-  echo "function openChatWindow(){
-    if(document.act.noopenchat.value == 0){
+  echo "function openChatWindow() {
+    if (document.act.noopenchat.value == 0) {
       try{
         ".$iChatTarget."_ref = window.open('','$iChatTarget','location=1,menubar=0,toolbar=0,resizable=1,scrollbars=0,status=0,width=755,height=225');
         document.iChatForm.submit();
       }
-      catch(e){}
+      catch(e) {}
       document.act.noopenchat.value = 1;
     }
-    else if(".$iChatTarget."_ref != null) {
+    else if (".$iChatTarget."_ref != null) {
       try{
         ".$iChatTarget."_ref.focus();
       }
-      catch(e){}
+      catch(e) {}
     }
   }";
 
-  if($OpenChat)  echo " openChatWindow();";
+  if ($OpenChat)  echo " openChatWindow();";
   echo "  </script>";
 
-  //Behaviour Check
-  if($Use_Behavior_Checker){
-    include_once('includes/behavior_checker.class.php');
-    $BChecker = new BehaviorChecker($Pl, $GLOBALS['Btl_Intv'], 0, $GLOBALS['Offline_Time'], $GLOBALS['CFU_Time'], $GLOBALS['DBPrefix']);
-    $BChecker->checkInsomnia();
-  }
 
   //End Body
   echo "</body>";
@@ -802,7 +803,7 @@ function getRecoverRate($Ms, $Player, $Pl) {
 
 function setAddStatImg($Growth, $StatReq, $Stat, &$aCollection, $Limit=150) {
   global $General_Image_Dir;
-  if ($Growth >= $StatReq && $Stat < $Limit){
+  if ($Growth >= $StatReq && $Stat < $Limit) {
     $aCollection['Style'] = " cursor: pointer;";
     $aCollection['Image'] = "$General_Image_Dir/neo/plus_sign.gif";
   } else {
