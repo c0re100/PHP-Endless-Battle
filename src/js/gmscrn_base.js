@@ -130,7 +130,7 @@ function offLayer() {
 }
 
 function proceedAddStat(typeStr) {
-  HideSTif ();
+  HideSTiF();
   document.addstat.action='statsmod.php?action = addstat';
   document.addstat.target = window.SecTarget;
   document.addstat.actionb.value = typeStr;
@@ -143,16 +143,16 @@ function failAddStat(oSubject, sMsg) {
   return false;
 }
 
-function ShowSTif () {
+function ShowSTiF() {
   document.getElementById('STiF').style.left = 150;
 }
 
-function HideSTif () {
+function HideSTiF() {
   document.getElementById('STiF').style.left = -1150;
 }
 
 function SetiFT(msgText) {
-  ShowSTif ();
+  ShowSTiF();
   tmpTxt = eval(msgText);
   document.getElementById("iFT").innerHTML = tmpTxt;
 }
