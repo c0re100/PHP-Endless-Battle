@@ -399,9 +399,6 @@
     setTimeout(enablerf, 2000);
     </script>';
 
-  //Use Auto Count
-  $bn = 4;
-
   //Include Right Menu
   include_once('gmscrn_right_menu.php');
 
